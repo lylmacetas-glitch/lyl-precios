@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LyL Macetas — Lista de Precios</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/sucrase@3.35.0/dist/sucrase.js"></script>
+  <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { background: #1b4332; }</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="productosmin.js"></script>
+  <script id="app-src" type="text/plain" src="lyl_precios.jsx"></script>
+  <script>
+    fetch('lyl_precios.jsx')
+      .then(r => r.text())
+      .then(code => {
+        const compiled = sucrase.transform(code, { transforms: ['jsx', 'imports'] }).code;
+        const blob = new Blob([compiled], { type: 'application/javascript' });
+        const url = URL.createObjectURL(blob);
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = () => {
+          const root = ReactDOM.createRoot(document.getElementById('root'));
+          root.render(React.createElement(App));
+        };
+        document.head.appendChild(s);
+      });
+  </script>
+</body>
+</html>
