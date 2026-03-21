@@ -1366,6 +1366,8 @@ function App() {
   const [notaAbierta, setNotaAbierta] = useState(null);
   const [notaTemp, setNotaTemp] = useState("");
   const [confirmarVaciar, setConfirmarVaciar] = useState(false);
+  const [modoCompartir, setModoCompartir] = useState(false);
+  const [seleccionados, setSeleccionados] = useState({});
 
   const setP = setPresupuesto;
 
@@ -1504,10 +1506,18 @@ function App() {
   const generarTextoGrupo = (g) => `🌿 *${g.articulo}* — ${g.material}${g.pintada ? " (pintada)" : " (sin pintar)"}\n${g.variantes.map(v => `  • ${v.medidas} → ${formatPrecio(v.precio)}`).join("\n")}`;
 
 
-  const compartirCategoria = () => {
-    const items = gruposBuscar;
-    if (items.length === 0) { alert("No hay productos con los filtros actuales."); return; }
-    // Título dinámico según filtros activos
+  const abrirModoCompartir = () => {
+    if (gruposBuscar.length === 0) { alert("No hay productos con los filtros actuales."); return; }
+    // Seleccionar todos por defecto
+    const sel = {};
+    gruposBuscar.forEach((g, i) => { sel[i] = true; });
+    setSeleccionados(sel);
+    setModoCompartir(true);
+  };
+
+  const enviarSeleccion = () => {
+    const items = gruposBuscar.filter((g, i) => seleccionados[i]);
+    if (items.length === 0) { alert("Seleccioná al menos un producto."); return; }
     const partes = [];
     if (material !== "Todos") partes.push(material);
     if (pintada !== "Todos") partes.push(pintada.toLowerCase());
@@ -1525,6 +1535,7 @@ function App() {
     });
     txt += `_lylmacetas.com.ar · 11 5755-4899_`;
     window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, "_blank");
+    setModoCompartir(false);
   };
 
   // RENDER
@@ -1579,7 +1590,7 @@ function App() {
     ),
     // Botón compartir categoría
     gruposBuscar.length > 0 && e('button', {
-      onClick: compartirCategoria,
+      onClick: abrirModoCompartir,
       style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #2c5f7a", background: "transparent", color: "#2c5f7a", cursor: "pointer", fontSize: 12, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }
     }, (() => {
             const partes = [];
@@ -1594,7 +1605,57 @@ function App() {
       : gruposBuscar.map((grupo, idx) => {
           const dc = matColors[grupo.material] || "#888";
           const ps = grupo.material === "Barro" ? "" : (grupo.pintada ? "pintada" : "sin pintar");
-          return e('div', {
+        
+  // Modal selección para compartir
+  const modalCompartirEl = modoCompartir && e('div', {
+    style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
+  },
+    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480, maxHeight: "80vh", display: "flex", flexDirection: "column" } },
+      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
+        e('span', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c" } }, "Seleccioná qué enviar"),
+        e('button', { onClick: () => setModoCompartir(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
+      ),
+      e('div', { style: { display: "flex", gap: 8, marginBottom: 12 } },
+        e('button', {
+          onClick: () => { const sel = {}; gruposBuscar.forEach((g,i) => { sel[i] = true; }); setSeleccionados(sel); },
+          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12 }
+        }, "Seleccionar todo"),
+        e('button', {
+          onClick: () => setSeleccionados({}),
+          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 12 }
+        }, "Deseleccionar todo")
+      ),
+      e('div', { style: { overflowY: "auto", flex: 1, marginBottom: 12 } },
+        gruposBuscar.map((g, i) => {
+          const dc = matColors[g.material] || "#888";
+          const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
+          return e('label', {
+            key: i,
+            style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 4px", borderBottom: "1px solid #f0ede8", cursor: "pointer" }
+          },
+            e('input', {
+              type: "checkbox",
+              checked: seleccionados[i] || false,
+              onChange: () => setSeleccionados(prev => ({ ...prev, [i]: !prev[i] })),
+              style: { width: 18, height: 18, accentColor: "#4a7c59", cursor: "pointer", flexShrink: 0 }
+            }),
+            e('div', null,
+              e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, g.articulo + ps),
+              e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } },
+                g.variantes.map(v => v.medidas || "—").join(" · ")
+              )
+            )
+          );
+        })
+      ),
+      e('button', {
+        onClick: enviarSeleccion,
+        style: { width: "100%", padding: "13px", borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
+      }, `📲 Enviar ${Object.values(seleccionados).filter(Boolean).length} productos por WhatsApp`)
+    )
+  );
+
+  return e('div', {
             key: idx,
             style: { background: "#ffffff", borderRadius: 10, marginBottom: 8, border: "1px solid #e8e4de", overflow: "hidden" }
           },
@@ -1786,6 +1847,56 @@ function App() {
     )
   );
 
+
+  // Modal selección para compartir
+  const modalCompartirEl = modoCompartir && e('div', {
+    style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
+  },
+    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480, maxHeight: "80vh", display: "flex", flexDirection: "column" } },
+      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
+        e('span', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c" } }, "Seleccioná qué enviar"),
+        e('button', { onClick: () => setModoCompartir(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
+      ),
+      e('div', { style: { display: "flex", gap: 8, marginBottom: 12 } },
+        e('button', {
+          onClick: () => { const sel = {}; gruposBuscar.forEach((g,i) => { sel[i] = true; }); setSeleccionados(sel); },
+          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12 }
+        }, "Seleccionar todo"),
+        e('button', {
+          onClick: () => setSeleccionados({}),
+          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 12 }
+        }, "Deseleccionar todo")
+      ),
+      e('div', { style: { overflowY: "auto", flex: 1, marginBottom: 12 } },
+        gruposBuscar.map((g, i) => {
+          const dc = matColors[g.material] || "#888";
+          const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
+          return e('label', {
+            key: i,
+            style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 4px", borderBottom: "1px solid #f0ede8", cursor: "pointer" }
+          },
+            e('input', {
+              type: "checkbox",
+              checked: seleccionados[i] || false,
+              onChange: () => setSeleccionados(prev => ({ ...prev, [i]: !prev[i] })),
+              style: { width: 18, height: 18, accentColor: "#4a7c59", cursor: "pointer", flexShrink: 0 }
+            }),
+            e('div', null,
+              e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, g.articulo + ps),
+              e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } },
+                g.variantes.map(v => v.medidas || "—").join(" · ")
+              )
+            )
+          );
+        })
+      ),
+      e('button', {
+        onClick: enviarSeleccion,
+        style: { width: "100%", padding: "13px", borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
+      }, `📲 Enviar ${Object.values(seleccionados).filter(Boolean).length} productos por WhatsApp`)
+    )
+  );
+
   return e('div', { style: { minHeight: "100vh", background: "#f8f6f2", fontFamily: "'Helvetica Neue', Arial, sans-serif", maxWidth: 480, margin: "0 auto" } },
     headerEl,
     tabsEl,
@@ -1793,7 +1904,8 @@ function App() {
       vista === "buscar" ? vistaBuscar : vistaPresupuesto
     ),
     modalEl,
-    confirmarEl
+    confirmarEl,
+    modalCompartirEl
   );
 }
 
