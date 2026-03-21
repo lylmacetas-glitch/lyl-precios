@@ -6,7 +6,15 @@
   <title>LyL Macetas — Lista de Precios</title>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { background: #181818; }</style>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f8f6f2; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    input:focus { border-color: #4a7c59 !important; box-shadow: 0 0 0 2px rgba(74,124,89,0.15); }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #f0ede8; }
+    ::-webkit-scrollbar-thumb { background: #c8c4be; border-radius: 2px; }
+  </style>
 </head>
 <body>
   <div id="root"></div>
@@ -1309,8 +1317,8 @@ const matColors = {
   Insumos: "#0d7377", Otros: "#7c5c20", Manual: "#7c5c20"
 };
 
-const GRN = "#2d6a4f"; const GRN_XL = "#74c69d"; const GRN_LT = "#b7e4c7";
-const GRN_MNT = "#52b788"; const GRN_OSC = "#1b4332"; const GRN_MED = "#2d6a4f";
+const GRN = "#4a7c59"; const GRN_XL = "#2d5a3d"; const GRN_LT = "#6b9e7a";
+const GRN_MNT = "#4a7c59"; const GRN_OSC = "#f8f6f2"; const GRN_MED = "#4a7c59";
 
 const getNextNumero = () => {
   try {
@@ -1334,7 +1342,7 @@ const clearBorrador = () => {
 const e = React.createElement;
 
 const S = {
-  input: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #2a2a2a", background: "#111", color: "#ccc", fontSize: 13, outline: "none" },
+  input: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", background: "#f5f3ef", color: "#555", fontSize: 13, outline: "none" },
   pill: (c) => ({ display: "inline-block", padding: "1px 7px", borderRadius: 10, background: c + "22", color: c, fontSize: 10, border: `1px solid ${c}44` }),
 };
 
@@ -1496,16 +1504,15 @@ function App() {
   const generarTextoGrupo = (g) => `🌿 *${g.articulo}* — ${g.material}${g.pintada ? " (pintada)" : " (sin pintar)"}\n${g.variantes.map(v => `  • ${v.medidas} → ${formatPrecio(v.precio)}`).join("\n")}`;
 
   // RENDER
-  const headerEl = e('div', { style: { background: `linear-gradient(90deg, ${GRN_OSC}, ${GRN_MED})`, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" } },
+  const headerEl = e('div', { style: { background: "#ffffff", borderBottom: "2px solid #e8e4de", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" } },
     e('div', null,
-      e('div', { style: { fontSize: 10, letterSpacing: 4, color: GRN_LT, textTransform: "uppercase" } }, "LyL Macetas"),
-      e('div', { style: { fontSize: 20, fontWeight: "bold", color: GRN_XL, marginTop: 2 } }, "Consulta de Precios"),
-      e('div', { style: { fontSize: 10, color: GRN_MNT, marginTop: 1 } }, `Lista minorista · ${FECHA_LISTA}`)
+      e('img', { src: "https://www.lylmacetas.com.ar/wp-content/uploads/2022/02/logo-02.svg", alt: "LyL Macetas", style: { height: 40, marginBottom: 4 } }),
+      e('div', { style: { fontSize: 10, color: GRN_MNT, marginTop: 2, letterSpacing: 1 } }, `Lista minorista · ${FECHA_LISTA}`)
     ),
     presupuesto.length > 0 && e('div', { style: { background: GRN, borderRadius: 20, padding: "4px 12px", fontSize: 12, color: GRN_LT, fontWeight: "bold" } }, `${presupuesto.length} items`)
   );
 
-  const tabsEl = e('div', { style: { display: "flex", borderBottom: "1px solid #222", background: "#141414" } },
+  const tabsEl = e('div', { style: { display: "flex", borderBottom: "1px solid #e8e4de", background: "#f0ede8" } },
     [["buscar", "🔍 Buscar"], ["presupuesto", "🧾 Presupuesto"]].map(([k, label]) =>
       e('button', {
         key: k,
@@ -1548,40 +1555,40 @@ function App() {
     ),
     // Resultados
     gruposBuscar.length === 0
-      ? e('div', { style: { textAlign: "center", color: "#444", padding: 30 } }, "Sin resultados")
+      ? e('div', { style: { textAlign: "center", color: "#555", padding: 30 } }, "Sin resultados")
       : gruposBuscar.map((grupo, idx) => {
           const dc = matColors[grupo.material] || "#888";
           const ps = grupo.material === "Barro" ? "" : (grupo.pintada ? "pintada" : "sin pintar");
           return e('div', {
             key: idx,
-            style: { background: "#1a1a1a", borderRadius: 10, marginBottom: 8, border: "1px solid #222", overflow: "hidden" }
+            style: { background: "#ffffff", borderRadius: 10, marginBottom: 8, border: "1px solid #e8e4de", overflow: "hidden" }
           },
-            e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 12px 7px", borderBottom: "1px solid #252525" } },
+            e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 12px 7px", borderBottom: "1px solid #ede9e3" } },
               e('div', null,
-                e('span', { style: { fontWeight: "bold", fontSize: 14, color: "#e8e3dc" } }, grupo.articulo),
+                e('span', { style: { fontWeight: "bold", fontSize: 14, color: "#2c2c2c" } }, grupo.articulo),
                 e('div', { style: { marginTop: 2, display: "flex", gap: 5, alignItems: "center" } },
                   e('div', { style: { width: 6, height: 6, borderRadius: "50%", background: dc } }),
-                  e('span', { style: { fontSize: 10, color: "#666" } }, grupo.material + (ps ? ` · ${ps}` : ""))
+                  e('span', { style: { fontSize: 10, color: "#777" } }, grupo.material + (ps ? ` · ${ps}` : ""))
                 )
               ),
               e('button', {
                 onClick: () => setTextoVisible(textoVisible?.idx === idx ? null : { idx, texto: generarTextoGrupo(grupo) }),
-                style: { padding: "3px 9px", borderRadius: 6, border: "1px solid #2a2a2a", background: "transparent", color: "#555", cursor: "pointer", fontSize: 10 }
+                style: { padding: "3px 9px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 10 }
               }, textoVisible?.idx === idx ? "✓ ↑" : "texto")
             ),
-            textoVisible?.idx === idx && e('div', { style: { padding: "8px 12px", background: "#111", borderBottom: "1px solid #222" } },
+            textoVisible?.idx === idx && e('div', { style: { padding: "8px 12px", background: "#f5f3ef", borderBottom: "1px solid #e8e4de" } },
               e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: textoVisible.texto.split("\n").length + 1, style: { ...S.input, fontFamily: "monospace", fontSize: 11, resize: "none" } })
             ),
             grupo.variantes.map((v, vi) =>
               e('div', {
                 key: vi,
-                style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 12px", borderBottom: vi < grupo.variantes.length - 1 ? "1px solid #222" : "none" }
+                style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 12px", borderBottom: vi < grupo.variantes.length - 1 ? "1px solid #e8e4de" : "none" }
               },
                 e('div', null,
                   e('span', { style: { fontSize: 12, color: "#888" } }, v.medidas || "—"),
                   (v.litros || v.peso_kg) && e('div', { style: { display: "flex", gap: 8, marginTop: 2 } },
-                    v.litros && e('span', { style: { fontSize: 10, color: "#555", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `🪣 ${v.litros}L`),
-                    v.peso_kg && e('span', { style: { fontSize: 10, color: "#555", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `⚖ ${v.peso_kg}kg`)
+                    v.litros && e('span', { style: { fontSize: 10, color: "#666", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `🪣 ${v.litros}L`),
+                    v.peso_kg && e('span', { style: { fontSize: 10, color: "#666", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `⚖ ${v.peso_kg}kg`)
                   )
                 ),
                 e('div', { style: { display: "flex", alignItems: "center", gap: 10 } },
@@ -1600,7 +1607,7 @@ function App() {
   // Vista Presupuesto
   const vistaPresupuesto = e('div', { style: { padding: "12px 14px" } },
     // Número y datos
-    e('div', { style: { background: "#1a1a1a", borderRadius: 10, padding: "12px", marginBottom: 10, border: "1px solid #222" } },
+    e('div', { style: { background: "#ffffff", borderRadius: 10, padding: "12px", marginBottom: 10, border: "1px solid #e8e4de" } },
       e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 } },
         e('span', { style: { fontSize: 12, color: GRN_MNT, fontWeight: "bold" } }, numPresup || "N° pendiente"),
         e('button', {
@@ -1614,12 +1621,12 @@ function App() {
 
     // Items
     presupuesto.length === 0
-      ? e('div', { style: { textAlign: "center", color: "#333", padding: 30, fontSize: 13 } }, "El presupuesto está vacío.\nBuscá productos en la pestaña 🔍")
+      ? e('div', { style: { textAlign: "center", color: "#999", padding: 30, fontSize: 13 } }, "El presupuesto está vacío.\nBuscá productos en la pestaña 🔍")
       : presupuesto.map(item =>
-          e('div', { key: item.key, style: { background: "#1a1a1a", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #222" } },
+          e('div', { key: item.key, style: { background: "#ffffff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #e8e4de" } },
             e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 } },
               e('div', { style: { flex: 1 } },
-                e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#e8e3dc" } }, item.articulo + (item.medidas ? " " + item.medidas : "")),
+                e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, item.articulo + (item.medidas ? " " + item.medidas : "")),
                 e('div', { style: { display: "flex", gap: 6, marginTop: 3, flexWrap: "wrap", alignItems: "center" } },
                   e('span', { style: S.pill(matColors[item.material] || "#888") }, item.material),
                   e('span', { style: { fontSize: 11, color: GRN_MNT } }, formatPrecio(item.precio) + " c/u"),
@@ -1629,12 +1636,12 @@ function App() {
                   )
                 )
               ),
-              e('button', { onClick: () => quitar(item.key), style: { background: "transparent", border: "none", color: "#333", cursor: "pointer", fontSize: 16, padding: "0 4px" } }, "×")
+              e('button', { onClick: () => quitar(item.key), style: { background: "transparent", border: "none", color: "#999", cursor: "pointer", fontSize: 16, padding: "0 4px" } }, "×")
             ),
             e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 } },
               e('div', { style: { display: "flex", alignItems: "center", gap: 8 } },
                 e('button', { onClick: () => setP(prev => prev.map(i => i.key === item.key ? { ...i, cantidad: Math.max(1, i.cantidad - 1) } : i)), style: { width: 24, height: 24, borderRadius: "50%", border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 16 } }, "−"),
-                e('span', { style: { fontSize: 14, color: "#ccc", minWidth: 20, textAlign: "center" } }, item.cantidad),
+                e('span', { style: { fontSize: 14, color: "#555", minWidth: 20, textAlign: "center" } }, item.cantidad),
                 e('button', { onClick: () => setP(prev => prev.map(i => i.key === item.key ? { ...i, cantidad: i.cantidad + 1 } : i)), style: { width: 24, height: 24, borderRadius: "50%", border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 16 } }, "+")
               ),
               e('span', { style: { fontSize: 14, fontWeight: "bold", color: GRN_XL } }, formatPrecio(item.precio * item.cantidad))
@@ -1644,7 +1651,7 @@ function App() {
                   e('input', { type: "text", placeholder: "Nota...", value: notaTemp, onChange: ev => setNotaTemp(ev.target.value), onKeyDown: ev => ev.key === "Enter" && guardarNota(item.key), autoFocus: true, style: { ...S.input, fontSize: 12 } }),
                   e('div', { style: { display: "flex", gap: 6, marginTop: 4 } },
                     e('button', { onClick: () => guardarNota(item.key), style: { flex: 1, padding: "5px", borderRadius: 6, border: "none", background: GRN, color: "#fff", cursor: "pointer", fontSize: 11 } }, "✓ Guardar"),
-                    e('button', { onClick: () => setNotaAbierta(null), style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #333", background: "transparent", color: "#555", cursor: "pointer", fontSize: 11 } }, "×")
+                    e('button', { onClick: () => setNotaAbierta(null), style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #e0dbd4", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 } }, "×")
                   )
                 )
               : e('button', { onClick: () => { setNotaAbierta(item.key); setNotaTemp(item.nota || ""); }, style: { marginTop: 6, background: "transparent", border: "none", color: item.nota ? GRN_MNT : "#333", cursor: "pointer", fontSize: 10, padding: 0 } },
@@ -1654,23 +1661,23 @@ function App() {
         ),
 
     // Ajustes y totales
-    presupuesto.length > 0 && e('div', { style: { background: "#1a1a1a", borderRadius: 10, padding: "12px", marginTop: 4, border: "1px solid #222" } },
+    presupuesto.length > 0 && e('div', { style: { background: "#ffffff", borderRadius: 10, padding: "12px", marginTop: 4, border: "1px solid #e8e4de" } },
       e('div', { style: { display: "flex", gap: 8, marginBottom: 10 } },
         e('input', { type: "number", placeholder: "Envío $", value: envio, onChange: ev => { setEnvio(ev.target.value); save({ envio: ev.target.value }); }, style: { ...S.input, flex: 1 } }),
         e('input', { type: "number", placeholder: "Descuento %", value: descuento, onChange: ev => { setDescuento(ev.target.value); save({ descuento: ev.target.value }); }, style: { ...S.input, flex: 1 } })
       ),
       e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#888", marginBottom: 4 } }, e('span', null, "Subtotal"), e('span', null, formatPrecio(subtotal))),
-      presupuesto.some(i => i.sinDescuento) && e('div', { style: { fontSize: 10, color: "#555", marginBottom: 4, textAlign: "right" } }, `Base con descuento: ${formatPrecio(baseParaDesc)}`),
+      presupuesto.some(i => i.sinDescuento) && e('div', { style: { fontSize: 10, color: "#666", marginBottom: 4, textAlign: "right" } }, `Base con descuento: ${formatPrecio(baseParaDesc)}`),
       descPct > 0 && e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#e07b39", marginBottom: 4 } }, e('span', null, `Descuento ${descPct}%`), e('span', null, `- ${formatPrecio(montoDesc)}`)),
       envioNum > 0 && e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#888", marginBottom: 4 } }, e('span', null, "Envío"), e('span', null, formatPrecio(envioNum))),
-      e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: "bold", color: GRN_XL, borderTop: "1px solid #333", paddingTop: 8, marginTop: 4 } }, e('span', null, "TOTAL"), e('span', null, formatPrecio(totalFinal))),
-      e('label', { style: { display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 11, color: "#555", cursor: "pointer" } },
+      e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: "bold", color: GRN_XL, borderTop: "1px solid #e0dbd4", paddingTop: 8, marginTop: 4 } }, e('span', null, "TOTAL"), e('span', null, formatPrecio(totalFinal))),
+      e('label', { style: { display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 11, color: "#666", cursor: "pointer" } },
         e('input', { type: "checkbox", checked: mostrarAnticipo, onChange: () => setMostrarAnticipo(v => !v) }),
         "Mostrar anticipo y saldo"
       ),
       mostrarAnticipo && e('div', { style: { marginTop: 4 } },
         e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 11, color: GRN_MNT, marginTop: 2 } }, e('span', null, "Anticipo 80%"), e('span', null, formatPrecio(anticipo80))),
-        e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 11, color: "#555" } }, e('span', null, "Saldo"), e('span', null, formatPrecio(saldo20)))
+        e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 11, color: "#666" } }, e('span', null, "Saldo"), e('span', null, formatPrecio(saldo20)))
       )
     ),
 
@@ -1682,26 +1689,26 @@ function App() {
       }, "📲 Enviar por WhatsApp"),
       e('button', {
         onClick: () => setTextoVisible(textoVisible?.idx === "presup" ? null : { idx: "presup", texto: generarTexto() }),
-        style: { width: "100%", padding: "10px", borderRadius: 10, border: "1px solid #444", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12 }
+        style: { width: "100%", padding: "10px", borderRadius: 10, border: "1px solid #d0ccc6", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12 }
       }, "📋 Ver texto para copiar"),
-      textoVisible?.idx === "presup" && e('div', { style: { background: "#111", border: `1px solid ${GRN}`, borderRadius: 8, padding: "10px 12px" } },
+      textoVisible?.idx === "presup" && e('div', { style: { background: "#f5f3ef", border: `1px solid ${GRN}`, borderRadius: 8, padding: "10px 12px" } },
         e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: Math.min(textoVisible.texto.split("\n").length + 1, 16), style: { ...S.input, fontFamily: "monospace", fontSize: 12, lineHeight: 1.5, resize: "vertical" } })
       ),
       e('button', {
         onClick: () => setTextoVisible(textoVisible?.idx === "json" ? null : { idx: "json", texto: generarJson() }),
         style: { width: "100%", padding: "11px", borderRadius: 10, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 13, fontWeight: "bold" }
       }, "📄 Generar PDF / Excel / Remito → Pegar a Claude"),
-      textoVisible?.idx === "json" && e('div', { style: { background: "#0d1f14", border: `1px solid ${GRN}`, borderRadius: 8, padding: "12px 14px" } },
+      textoVisible?.idx === "json" && e('div', { style: { background: "#f0f7f2", border: `1px solid ${GRN}`, borderRadius: 8, padding: "12px 14px" } },
         e('div', { style: { fontSize: 12, color: GRN_MNT, marginBottom: 6, fontWeight: "bold" } }, "📋 Copiá esto y pegalo en el chat:"),
         e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: 6, style: { ...S.input, fontFamily: "monospace", fontSize: 11, lineHeight: 1.4, resize: "vertical" } })
       ),
       e('button', {
         onClick: () => setConfirmarVaciar(true),
-        style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #2a2a2a", background: "transparent", color: "#3a3a3a", cursor: "pointer", fontSize: 11 }
+        style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #ddd", background: "transparent", color: "#aaa", cursor: "pointer", fontSize: 11 }
       }, "🗑 Vaciar presupuesto"),
-      e('div', { style: { borderTop: "1px solid #222", paddingTop: 10, marginTop: 2, display: "flex", gap: 8 } },
+      e('div', { style: { borderTop: "1px solid #e8e4de", paddingTop: 10, marginTop: 2, display: "flex", gap: 8 } },
         e('button', { onClick: exportarBorrador, style: { flex: 1, padding: "9px", borderRadius: 8, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 12, fontWeight: "bold" } }, "💾 Guardar borrador"),
-        e('label', { style: { flex: 1, padding: "9px", borderRadius: 8, border: "1px solid #444", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12, textAlign: "center", display: "block" } },
+        e('label', { style: { flex: 1, padding: "9px", borderRadius: 8, border: "1px solid #d0ccc6", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12, textAlign: "center", display: "block" } },
           "📂 Cargar borrador",
           e('input', { type: "file", accept: ".json", onChange: importarBorrador, style: { display: "none" } })
         )
@@ -1711,7 +1718,7 @@ function App() {
 
   // Modal manual
   const modalEl = modalAbierto && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 } },
-    e('div', { style: { background: "#1a1a1a", borderRadius: 14, padding: 20, width: "100%", maxWidth: 360, border: "1px solid #333" } },
+    e('div', { style: { background: "#ffffff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 360, border: "1px solid #e0dbd4" } },
       e('h3', { style: { color: GRN_XL, fontSize: 15, marginBottom: 14 } }, "Artículo manual"),
       e('input', { type: "text", placeholder: "Artículo *", value: formManual.articulo, onChange: ev => setFormManual(f => ({ ...f, articulo: ev.target.value })), style: { ...S.input, marginBottom: 8 } }),
       e('input', { type: "text", placeholder: "Medidas", value: formManual.medidas, onChange: ev => setFormManual(f => ({ ...f, medidas: ev.target.value })), style: { ...S.input, marginBottom: 8 } }),
@@ -1725,7 +1732,7 @@ function App() {
         }, m))
       ),
       e('div', { style: { display: "flex", gap: 8 } },
-        e('button', { onClick: () => setModalAbierto(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #2a2a2a", background: "transparent", color: "#555", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
+        e('button', { onClick: () => setModalAbierto(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
         e('button', { onClick: guardarManual, style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: GRN, color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "Agregar")
       )
     )
@@ -1733,18 +1740,18 @@ function App() {
 
   // Modal confirmar vaciar
   const confirmarEl = confirmarVaciar && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 } },
-    e('div', { style: { background: "#1a1a1a", borderRadius: 14, padding: 20, width: "100%", maxWidth: 320, border: "1px solid #333", textAlign: "center" } },
+    e('div', { style: { background: "#ffffff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 320, border: "1px solid #e0dbd4", textAlign: "center" } },
       e('div', { style: { fontSize: 32, marginBottom: 10 } }, "🗑"),
-      e('div', { style: { fontSize: 15, color: "#ccc", marginBottom: 6 } }, "¿Vaciar el presupuesto?"),
-      e('div', { style: { fontSize: 12, color: "#555", marginBottom: 16 } }, "Se van a borrar todos los items"),
+      e('div', { style: { fontSize: 15, color: "#555", marginBottom: 6 } }, "¿Vaciar el presupuesto?"),
+      e('div', { style: { fontSize: 12, color: "#666", marginBottom: 16 } }, "Se van a borrar todos los items"),
       e('div', { style: { display: "flex", gap: 8 } },
-        e('button', { onClick: () => setConfirmarVaciar(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #2a2a2a", background: "transparent", color: "#555", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
+        e('button', { onClick: () => setConfirmarVaciar(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
         e('button', { onClick: vaciar, style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: "#c0392b", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "Sí, vaciar")
       )
     )
   );
 
-  return e('div', { style: { minHeight: "100vh", background: "#181818", fontFamily: "'Georgia', serif", maxWidth: 480, margin: "0 auto" } },
+  return e('div', { style: { minHeight: "100vh", background: "#f8f6f2", fontFamily: "'Helvetica Neue', Arial, sans-serif", maxWidth: 480, margin: "0 auto" } },
     headerEl,
     tabsEl,
     e('div', { style: { overflowY: "auto" } },
