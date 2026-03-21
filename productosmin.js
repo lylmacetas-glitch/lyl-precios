@@ -1,6 +1,4 @@
 window.LYL_PRODUCTOS = [
-  // BARRO — BLUM
-  { articulo: "FRUTILLERA 60", medidas: "", material: "Barro", pintada: false, precio: 174920, litros: null, peso_kg: null },
   { articulo: "MAC. COMUN Nº 16 PINTADA", medidas: "", material: "Barro", pintada: true, precio: 6400, litros: null, peso_kg: null },
   { articulo: "MAC. COMUN Nº 18 PINTADA", medidas: "", material: "Barro", pintada: true, precio: 8750, litros: null, peso_kg: null },
   { articulo: "PORTEÑA Nº20", medidas: "", material: "Barro", pintada: false, precio: 4750, litros: null, peso_kg: null },
@@ -154,8 +152,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "ICONO Nº 10", medidas: "", material: "Barro", pintada: false, precio: 1650, litros: null, peso_kg: null },
   { articulo: "ICONO Nº 8  PINTADA", medidas: "", material: "Barro", pintada: true, precio: 2850, litros: null, peso_kg: null },
   { articulo: "ICONO Nº 10  PINTADA", medidas: "", material: "Barro", pintada: true, precio: 3390, litros: null, peso_kg: null },
-
-  // BARRO ARTESANAL — CACHARROS
   { articulo: "Nº3 (*) 20CM", medidas: "", material: "Barro Artesanal", pintada: false, precio: 14950, litros: null, peso_kg: null },
   { articulo: "MATERON GIGANTE 10CM", medidas: "", material: "Barro Artesanal", pintada: false, precio: 4370, litros: null, peso_kg: null },
   { articulo: "Nº1  (*) 16CM BOCA", medidas: "", material: "Barro Artesanal", pintada: false, precio: 7240, litros: null, peso_kg: null },
@@ -186,8 +182,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "JARRA CHICA", medidas: "", material: "Barro Artesanal", pintada: false, precio: 7580, litros: null, peso_kg: null },
   { articulo: "GIGANTE SUPER", medidas: "", material: "Barro Artesanal", pintada: false, precio: 29320, litros: null, peso_kg: null },
   { articulo: "VOLCADO 1 30CM BOCA", medidas: "", material: "Barro Artesanal", pintada: false, precio: 29320, litros: null, peso_kg: null },
-  // FIBROCEMENTO PINTADO
-  // Misionera
   { articulo: "Misionera", medidas: "20altx18bocx16bas", material: "Fibrocemento", pintada: true, precio: 9020, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "28altx18bocx15bas", material: "Fibrocemento", pintada: true, precio: 19830, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "38altx28bocx20bas", material: "Fibrocemento", pintada: true, precio: 31560, litros: null, peso_kg: null },
@@ -196,50 +190,40 @@ window.LYL_PRODUCTOS = [
   { articulo: "Misionera", medidas: "67altx37bocx32bas", material: "Fibrocemento", pintada: true, precio: 56740, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "90altx40bocx35bas", material: "Fibrocemento", pintada: true, precio: 95790, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "80altx50bocx40bas", material: "Fibrocemento", pintada: true, precio: 101430, litros: null, peso_kg: null },
-  // Misionera con Borde
   { articulo: "Misionera con Borde", medidas: "35CM", material: "Fibrocemento", pintada: true, precio: 31780, litros: null, peso_kg: null },
   { articulo: "Misionera con Borde", medidas: "45CM", material: "Fibrocemento", pintada: true, precio: 41660, litros: null, peso_kg: null },
   { articulo: "Misionera con Borde", medidas: "55CM", material: "Fibrocemento", pintada: true, precio: 75600, litros: null, peso_kg: null },
-  // Salteña
   { articulo: "Salteña", medidas: "77altx65bocx32bas", material: "Fibrocemento", pintada: true, precio: 116060, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "50altx65bocx32bas", material: "Fibrocemento", pintada: true, precio: 96840, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "65altx50 bocx25 bas", material: "Fibrocemento", pintada: true, precio: 63240, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "45altx40bocx20bas", material: "Fibrocemento", pintada: true, precio: 30990, litros: null, peso_kg: null },
-  // Copa
   { articulo: "Copa", medidas: "70altx50bocx28bas", material: "Fibrocemento", pintada: true, precio: 98060, litros: null, peso_kg: null },
   { articulo: "Copa", medidas: "55altx45bocx28bas", material: "Fibrocemento", pintada: true, precio: 45080, litros: null, peso_kg: null },
   { articulo: "Copa", medidas: "40altx33bocx16bas", material: "Fibrocemento", pintada: true, precio: 22540, litros: null, peso_kg: null },
-  // Bols
   { articulo: "Bols", medidas: "28altx55bocx27bas", material: "Fibrocemento", pintada: true, precio: 28840, litros: null, peso_kg: null },
   { articulo: "Bols", medidas: "30altx80bocx33bas", material: "Fibrocemento", pintada: true, precio: 46220, litros: null, peso_kg: null },
-  // Cónica / Tradicional
   { articulo: "Cónica / Tradicional", medidas: "30altx30bocx18bas", material: "Fibrocemento", pintada: true, precio: 16900, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "40altx40bocx25bas", material: "Fibrocemento", pintada: true, precio: 30990, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "50altx50bocx29bas", material: "Fibrocemento", pintada: true, precio: 36630, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "60altx60bocx36bas", material: "Fibrocemento", pintada: true, precio: 50720, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "70altx70bocx44bas", material: "Fibrocemento", pintada: true, precio: 76500, litros: null, peso_kg: null },
-  // Andina
   { articulo: "Andina", medidas: "35altx40bocx26bas", material: "Fibrocemento", pintada: true, precio: 32400, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "43altx50bocx33bas", material: "Fibrocemento", pintada: true, precio: 43200, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "55altx65bocx43bas", material: "Fibrocemento", pintada: true, precio: 77130, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "69altx80bocx53bas", material: "Fibrocemento", pintada: true, precio: 158610, litros: null, peso_kg: null },
-  // Cilindro
   { articulo: "Cilindro", medidas: "30altx30bocx30bas", material: "Fibrocemento", pintada: true, precio: 14430, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "50altx30bocx30bas", material: "Fibrocemento", pintada: true, precio: 21680, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "45altx45bocx45bas", material: "Fibrocemento", pintada: true, precio: 29760, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "45altx40bocx45bas", material: "Fibrocemento", pintada: true, precio: 67620, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "52altx52bocx52bas", material: "Fibrocemento", pintada: true, precio: 36060, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "60altx60bocx60bas", material: "Fibrocemento", pintada: true, precio: 67620, litros: null, peso_kg: null },
-  // Cono
   { articulo: "Cono", medidas: "100altx45bocx30bas", material: "Fibrocemento", pintada: true, precio: 63120, litros: null, peso_kg: null },
   { articulo: "Cono", medidas: "80altx40bocx30bas", material: "Fibrocemento", pintada: true, precio: 40580, litros: null, peso_kg: null },
   { articulo: "Cono", medidas: "60altx38bocx30bas", material: "Fibrocemento", pintada: true, precio: 31560, litros: null, peso_kg: null },
-  // Cono Moderno
   { articulo: "Cono Moderno", medidas: "40altx31bocx22bas", material: "Fibrocemento", pintada: true, precio: 22540, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "55altx36bocx24bas", material: "Fibrocemento", pintada: true, precio: 29310, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "70altx46bocx24bas", material: "Fibrocemento", pintada: true, precio: 39450, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "80altx46bocx28bas", material: "Fibrocemento", pintada: true, precio: 51750, litros: null, peso_kg: null },
-  // Cubo
   { articulo: "Cubo", medidas: "15altx15bocx15bas", material: "Fibrocemento", pintada: true, precio: 6760, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "20altx20bocx20bas", material: "Fibrocemento", pintada: true, precio: 8460, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "25altx25bocx25bas", material: "Fibrocemento", pintada: true, precio: 12390, litros: null, peso_kg: null },
@@ -249,12 +233,10 @@ window.LYL_PRODUCTOS = [
   { articulo: "Cubo", medidas: "45altx45bocx45bas", material: "Fibrocemento", pintada: true, precio: 33810, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "50altx50bocx50bas", material: "Fibrocemento", pintada: true, precio: 45080, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "60altx60bocx60bas", material: "Fibrocemento", pintada: true, precio: 78880, litros: null, peso_kg: null },
-  // Esfera
   { articulo: "Esfera", medidas: "20cm", material: "Fibrocemento", pintada: true, precio: 11260, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "28cm", material: "Fibrocemento", pintada: true, precio: 15780, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "40cm", material: "Fibrocemento", pintada: true, precio: 22540, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "50cm", material: "Fibrocemento", pintada: true, precio: 45080, litros: null, peso_kg: null },
-  // Jardinera
   { articulo: "Jardinera", medidas: "135lrgx50anchx45alt", material: "Fibrocemento", pintada: true, precio: 140880, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "125lrgx50anchx45alt", material: "Fibrocemento", pintada: true, precio: 123980, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "115lrgx50anchx45alt", material: "Fibrocemento", pintada: true, precio: 112700, litros: null, peso_kg: null },
@@ -284,11 +266,9 @@ window.LYL_PRODUCTOS = [
   { articulo: "Jardinera", medidas: "40lrgx20anchx10alt", material: "Fibrocemento", pintada: true, precio: 10710, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "40lrgx20anchx20alt", material: "Fibrocemento", pintada: true, precio: 12960, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "50lrgx20anchx20alt", material: "Fibrocemento", pintada: true, precio: 15210, litros: null, peso_kg: null },
-  // Paila
   { articulo: "Paila", medidas: "33cm", material: "Fibrocemento", pintada: true, precio: 10820, litros: null, peso_kg: null },
   { articulo: "Paila", medidas: "48cm", material: "Fibrocemento", pintada: true, precio: 16230, litros: null, peso_kg: null },
   { articulo: "Paila", medidas: "60cm", material: "Fibrocemento", pintada: true, precio: 20730, litros: null, peso_kg: null },
-  // Piramidal
   { articulo: "Piramidal", medidas: "120altx45bocx30bas", material: "Fibrocemento", pintada: true, precio: 112700, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "100altx40bocx30bas", material: "Fibrocemento", pintada: true, precio: 90160, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "80altx50bocx30bas", material: "Fibrocemento", pintada: true, precio: 67620, litros: null, peso_kg: null },
@@ -315,7 +295,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Piramidal", medidas: "20altx15bocx10bas", material: "Fibrocemento", pintada: true, precio: 5420, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "30altx15bocx10bas", material: "Fibrocemento", pintada: true, precio: 6300, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "40altx15bocx10bas", material: "Fibrocemento", pintada: true, precio: 7650, litros: null, peso_kg: null },
-  // Plato
   { articulo: "Plato", medidas: "20cm", material: "Fibrocemento", pintada: true, precio: 3940, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "30cm", material: "Fibrocemento", pintada: true, precio: 6760, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "40cm", material: "Fibrocemento", pintada: true, precio: 10710, litros: null, peso_kg: null },
@@ -326,11 +305,9 @@ window.LYL_PRODUCTOS = [
   { articulo: "Plato", medidas: "30", material: "Fibrocemento", pintada: true, precio: 8220, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "35", material: "Fibrocemento", pintada: true, precio: 10260, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "40", material: "Fibrocemento", pintada: true, precio: 12320, litros: null, peso_kg: null },
-  // Premium
   { articulo: "Premium", medidas: "20cmx22", material: "Fibrocemento", pintada: true, precio: 8620, litros: null, peso_kg: null },
   { articulo: "Premium", medidas: "24cmx27", material: "Fibrocemento", pintada: true, precio: 12930, litros: null, peso_kg: null },
   { articulo: "Premium", medidas: "30cmx35", material: "Fibrocemento", pintada: true, precio: 19830, litros: null, peso_kg: null },
-  // Prisma
   { articulo: "Prisma", medidas: "80altx40bocx40bas", material: "Fibrocemento", pintada: true, precio: 62900, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "60altx40bocx40bas", material: "Fibrocemento", pintada: true, precio: 34260, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "50altx40bocx40bas", material: "Fibrocemento", pintada: true, precio: 31560, litros: null, peso_kg: null },
@@ -348,20 +325,15 @@ window.LYL_PRODUCTOS = [
   { articulo: "Prisma", medidas: "30altx15bocx15bas", material: "Fibrocemento", pintada: true, precio: 5540, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "20altx15bocx15bas", material: "Fibrocemento", pintada: true, precio: 4960, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "80altx15bocx15bas", material: "Fibrocemento", pintada: true, precio: 16230, litros: null, peso_kg: null },
-  // Sanjuanina
   { articulo: "Sanjuanina", medidas: "63altx39bocx33bas", material: "Fibrocemento", pintada: true, precio: 54090, litros: null, peso_kg: null },
   { articulo: "Sanjuanina", medidas: "53altx36bocx30bas", material: "Fibrocemento", pintada: true, precio: 45080, litros: null, peso_kg: null },
-  // Tinaja
   { articulo: "Tinaja", medidas: "50cm", material: "Fibrocemento", pintada: true, precio: 36060, litros: null, peso_kg: null },
   { articulo: "Tinaja", medidas: "60cm", material: "Fibrocemento", pintada: true, precio: 40580, litros: null, peso_kg: null },
   { articulo: "Tinaja", medidas: "80cm", material: "Fibrocemento", pintada: true, precio: 126920, litros: null, peso_kg: null },
-  // Vaso Antiguo
   { articulo: "Vaso Antiguo", medidas: "45altx40bocx35bas", material: "Fibrocemento", pintada: true, precio: 22540, litros: null, peso_kg: null },
   { articulo: "Vaso Antiguo", medidas: "55altx50bocx35bas", material: "Fibrocemento", pintada: true, precio: 39450, litros: null, peso_kg: null },
-  // Ánfora
   { articulo: "Ánfora", medidas: "75cm de alto", material: "Fibrocemento", pintada: true, precio: 79050, litros: null, peso_kg: null },
   { articulo: "Ánfora", medidas: "90cm de alto", material: "Fibrocemento", pintada: true, precio: 112200, litros: null, peso_kg: null },
-  // Grecia
   { articulo: "Grecia", medidas: "24 h x 32 Ø x 15 ba", material: "Fibrocemento", pintada: true, precio: 30600, litros: null, peso_kg: null },
   { articulo: "Grecia", medidas: "36 h x 44 Ø x 20 ba", material: "Fibrocemento", pintada: true, precio: 35700, litros: null, peso_kg: null },
   { articulo: "Grecia", medidas: "42 h x 55 Ø x 25 ba", material: "Fibrocemento", pintada: true, precio: 38760, litros: null, peso_kg: null },
@@ -373,8 +345,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Misionera Recta", medidas: "40h x 35Ø x 40b", material: "Fibrocemento", pintada: true, precio: 39000, litros: null, peso_kg: null },
   { articulo: "Misionera Recta", medidas: "55h x 35Ø x 40b", material: "Fibrocemento", pintada: true, precio: 44000, litros: null, peso_kg: null },
   { articulo: "Misionera Recta", medidas: "70h x 35Ø x 40b", material: "Fibrocemento", pintada: true, precio: 59000, litros: null, peso_kg: null },
-  // FIBROCEMENTO SIN PINTAR
-  // Misionera
   { articulo: "Misionera", medidas: "20altx18bocx16bas", material: "Fibrocemento", pintada: false, precio: 6010, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "28altx18bocx15bas", material: "Fibrocemento", pintada: false, precio: 13220, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "38altx28bocx20bas", material: "Fibrocemento", pintada: false, precio: 21040, litros: null, peso_kg: null },
@@ -383,50 +353,40 @@ window.LYL_PRODUCTOS = [
   { articulo: "Misionera", medidas: "67altx37bocx32bas", material: "Fibrocemento", pintada: false, precio: 37830, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "90altx40bocx35bas", material: "Fibrocemento", pintada: false, precio: 63860, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "80altx50bocx40bas", material: "Fibrocemento", pintada: false, precio: 67620, litros: null, peso_kg: null },
-  // Misionera con Borde
   { articulo: "Misionera con Borde", medidas: "35CM", material: "Fibrocemento", pintada: false, precio: 21190, litros: null, peso_kg: null },
   { articulo: "Misionera con Borde", medidas: "45CM", material: "Fibrocemento", pintada: false, precio: 27770, litros: null, peso_kg: null },
   { articulo: "Misionera con Borde", medidas: "55CM", material: "Fibrocemento", pintada: false, precio: 50400, litros: null, peso_kg: null },
-  // Salteña
   { articulo: "Salteña", medidas: "77altx65bocx32bas", material: "Fibrocemento", pintada: false, precio: 77370, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "50altx65bocx32bas", material: "Fibrocemento", pintada: false, precio: 64560, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "65altx50 bocx25 bas", material: "Fibrocemento", pintada: false, precio: 42160, litros: null, peso_kg: null },
   { articulo: "Salteña", medidas: "45altx40bocx20bas", material: "Fibrocemento", pintada: false, precio: 20660, litros: null, peso_kg: null },
-  // Copa
   { articulo: "Copa", medidas: "70altx50bocx28bas", material: "Fibrocemento", pintada: false, precio: 65370, litros: null, peso_kg: null },
   { articulo: "Copa", medidas: "55altx45bocx28bas", material: "Fibrocemento", pintada: false, precio: 30050, litros: null, peso_kg: null },
   { articulo: "Copa", medidas: "40altx33bocx16bas", material: "Fibrocemento", pintada: false, precio: 15030, litros: null, peso_kg: null },
-  // Bols
   { articulo: "Bols", medidas: "28altx55bocx27bas", material: "Fibrocemento", pintada: false, precio: 19230, litros: null, peso_kg: null },
   { articulo: "Bols", medidas: "30altx80bocx33bas", material: "Fibrocemento", pintada: false, precio: 30810, litros: null, peso_kg: null },
-  // Cónica / Tradicional
   { articulo: "Cónica / Tradicional", medidas: "30altx30bocx18bas", material: "Fibrocemento", pintada: false, precio: 11270, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "40altx40bocx25bas", material: "Fibrocemento", pintada: false, precio: 20660, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "50altx50bocx29bas", material: "Fibrocemento", pintada: false, precio: 24420, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "60altx60bocx36bas", material: "Fibrocemento", pintada: false, precio: 33810, litros: null, peso_kg: null },
   { articulo: "Cónica / Tradicional", medidas: "70altx70bocx44bas", material: "Fibrocemento", pintada: false, precio: 51000, litros: null, peso_kg: null },
-  // Andina
   { articulo: "Andina", medidas: "35altx40bocx26bas", material: "Fibrocemento", pintada: false, precio: 21600, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "43altx50bocx33bas", material: "Fibrocemento", pintada: false, precio: 28800, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "55altx65bocx43bas", material: "Fibrocemento", pintada: false, precio: 51420, litros: null, peso_kg: null },
   { articulo: "Andina", medidas: "69altx80bocx53bas", material: "Fibrocemento", pintada: false, precio: 105740, litros: null, peso_kg: null },
-  // Cilindro
   { articulo: "Cilindro", medidas: "30altx30bocx30bas", material: "Fibrocemento", pintada: false, precio: 9620, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "50altx30bocx30bas", material: "Fibrocemento", pintada: false, precio: 14450, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "45altx45bocx45bas", material: "Fibrocemento", pintada: false, precio: 19840, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "45altx40bocx45bas", material: "Fibrocemento", pintada: false, precio: 45080, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "52altx52bocx52bas", material: "Fibrocemento", pintada: false, precio: 24040, litros: null, peso_kg: null },
   { articulo: "Cilindro", medidas: "60altx60bocx60bas", material: "Fibrocemento", pintada: false, precio: 45080, litros: null, peso_kg: null },
-  // Cono
   { articulo: "Cono", medidas: "100altx45bocx30bas", material: "Fibrocemento", pintada: false, precio: 42080, litros: null, peso_kg: null },
   { articulo: "Cono", medidas: "80altx40bocx30bas", material: "Fibrocemento", pintada: false, precio: 27050, litros: null, peso_kg: null },
   { articulo: "Cono", medidas: "60altx38bocx30bas", material: "Fibrocemento", pintada: false, precio: 21040, litros: null, peso_kg: null },
-  // Cono Moderno
   { articulo: "Cono Moderno", medidas: "40altx31bocx22bas", material: "Fibrocemento", pintada: false, precio: 15030, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "55altx36bocx24bas", material: "Fibrocemento", pintada: false, precio: 19540, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "70altx46bocx24bas", material: "Fibrocemento", pintada: false, precio: 26300, litros: null, peso_kg: null },
   { articulo: "Cono Moderno", medidas: "80altx46bocx28bas", material: "Fibrocemento", pintada: false, precio: 34500, litros: null, peso_kg: null },
-  // Cubo
   { articulo: "Cubo", medidas: "15altx15bocx15bas", material: "Fibrocemento", pintada: false, precio: 4510, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "20altx20bocx20bas", material: "Fibrocemento", pintada: false, precio: 5640, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "25altx25bocx25bas", material: "Fibrocemento", pintada: false, precio: 8260, litros: null, peso_kg: null },
@@ -436,12 +396,10 @@ window.LYL_PRODUCTOS = [
   { articulo: "Cubo", medidas: "45altx45bocx45bas", material: "Fibrocemento", pintada: false, precio: 22540, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "50altx50bocx50bas", material: "Fibrocemento", pintada: false, precio: 30050, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "60altx60bocx60bas", material: "Fibrocemento", pintada: false, precio: 52590, litros: null, peso_kg: null },
-  // Esfera
   { articulo: "Esfera", medidas: "20cm", material: "Fibrocemento", pintada: false, precio: 7510, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "28cm", material: "Fibrocemento", pintada: false, precio: 10520, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "40cm", material: "Fibrocemento", pintada: false, precio: 15030, litros: null, peso_kg: null },
   { articulo: "Esfera", medidas: "50cm", material: "Fibrocemento", pintada: false, precio: 30050, litros: null, peso_kg: null },
-  // Jardinera
   { articulo: "Jardinera", medidas: "135lrgx50anchx45alt", material: "Fibrocemento", pintada: false, precio: 93920, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "125lrgx50anchx45alt", material: "Fibrocemento", pintada: false, precio: 82650, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "115lrgx50anchx45alt", material: "Fibrocemento", pintada: false, precio: 75130, litros: null, peso_kg: null },
@@ -471,11 +429,9 @@ window.LYL_PRODUCTOS = [
   { articulo: "Jardinera", medidas: "40lrgx20anchx10alt", material: "Fibrocemento", pintada: false, precio: 7140, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "40lrgx20anchx20alt", material: "Fibrocemento", pintada: false, precio: 8640, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "50lrgx20anchx20alt", material: "Fibrocemento", pintada: false, precio: 10140, litros: null, peso_kg: null },
-  // Paila
   { articulo: "Paila", medidas: "33cm", material: "Fibrocemento", pintada: false, precio: 7210, litros: null, peso_kg: null },
   { articulo: "Paila", medidas: "48cm", material: "Fibrocemento", pintada: false, precio: 10820, litros: null, peso_kg: null },
   { articulo: "Paila", medidas: "60cm", material: "Fibrocemento", pintada: false, precio: 13820, litros: null, peso_kg: null },
-  // Piramidal
   { articulo: "Piramidal", medidas: "120altx45bocx30bas", material: "Fibrocemento", pintada: false, precio: 75130, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "100altx40bocx30bas", material: "Fibrocemento", pintada: false, precio: 60110, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "80altx50bocx30bas", material: "Fibrocemento", pintada: false, precio: 45080, litros: null, peso_kg: null },
@@ -502,7 +458,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Piramidal", medidas: "20altx15bocx10bas", material: "Fibrocemento", pintada: false, precio: 3610, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "30altx15bocx10bas", material: "Fibrocemento", pintada: false, precio: 4200, litros: null, peso_kg: null },
   { articulo: "Piramidal", medidas: "40altx15bocx10bas", material: "Fibrocemento", pintada: false, precio: 5100, litros: null, peso_kg: null },
-  // Plato
   { articulo: "Plato", medidas: "20cm", material: "Fibrocemento", pintada: false, precio: 2630, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "30cm", material: "Fibrocemento", pintada: false, precio: 4510, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "40cm", material: "Fibrocemento", pintada: false, precio: 7140, litros: null, peso_kg: null },
@@ -513,11 +468,9 @@ window.LYL_PRODUCTOS = [
   { articulo: "Plato", medidas: "30", material: "Fibrocemento", pintada: false, precio: 5480, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "35", material: "Fibrocemento", pintada: false, precio: 6840, litros: null, peso_kg: null },
   { articulo: "Plato", medidas: "40", material: "Fibrocemento", pintada: false, precio: 8210, litros: null, peso_kg: null },
-  // Premium
   { articulo: "Premium", medidas: "20cmx22", material: "Fibrocemento", pintada: false, precio: 5750, litros: null, peso_kg: null },
   { articulo: "Premium", medidas: "24cmx27", material: "Fibrocemento", pintada: false, precio: 8620, litros: null, peso_kg: null },
   { articulo: "Premium", medidas: "30cmx35", material: "Fibrocemento", pintada: false, precio: 13220, litros: null, peso_kg: null },
-  // Prisma
   { articulo: "Prisma", medidas: "80altx40bocx40bas", material: "Fibrocemento", pintada: false, precio: 41930, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "60altx40bocx40bas", material: "Fibrocemento", pintada: false, precio: 22840, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "50altx40bocx40bas", material: "Fibrocemento", pintada: false, precio: 21040, litros: null, peso_kg: null },
@@ -535,20 +488,15 @@ window.LYL_PRODUCTOS = [
   { articulo: "Prisma", medidas: "30altx15bocx15bas", material: "Fibrocemento", pintada: false, precio: 3690, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "20altx15bocx15bas", material: "Fibrocemento", pintada: false, precio: 3310, litros: null, peso_kg: null },
   { articulo: "Prisma", medidas: "80altx15bocx15bas", material: "Fibrocemento", pintada: false, precio: 10820, litros: null, peso_kg: null },
-  // Sanjuanina
   { articulo: "Sanjuanina", medidas: "63altx39bocx33bas", material: "Fibrocemento", pintada: false, precio: 36060, litros: null, peso_kg: null },
   { articulo: "Sanjuanina", medidas: "53altx36bocx30bas", material: "Fibrocemento", pintada: false, precio: 30050, litros: null, peso_kg: null },
-  // Tinaja
   { articulo: "Tinaja", medidas: "50cm", material: "Fibrocemento", pintada: false, precio: 24040, litros: null, peso_kg: null },
   { articulo: "Tinaja", medidas: "60cm", material: "Fibrocemento", pintada: false, precio: 27050, litros: null, peso_kg: null },
   { articulo: "Tinaja", medidas: "80cm", material: "Fibrocemento", pintada: false, precio: 84610, litros: null, peso_kg: null },
-  // Vaso Antiguo
   { articulo: "Vaso Antiguo", medidas: "45altx40bocx35bas", material: "Fibrocemento", pintada: false, precio: 15030, litros: null, peso_kg: null },
   { articulo: "Vaso Antiguo", medidas: "55altx50bocx35bas", material: "Fibrocemento", pintada: false, precio: 26300, litros: null, peso_kg: null },
-  // Ánfora
   { articulo: "Ánfora", medidas: "75cm de alto", material: "Fibrocemento", pintada: false, precio: 52700, litros: null, peso_kg: null },
   { articulo: "Ánfora", medidas: "90cm de alto", material: "Fibrocemento", pintada: false, precio: 74800, litros: null, peso_kg: null },
-  // Grecia
   { articulo: "Grecia", medidas: "24 h x 32 Ø x 15 ba", material: "Fibrocemento", pintada: false, precio: 20400, litros: null, peso_kg: null },
   { articulo: "Grecia", medidas: "36 h x 44 Ø x 20 ba", material: "Fibrocemento", pintada: false, precio: 23800, litros: null, peso_kg: null },
   { articulo: "Grecia", medidas: "42 h x 55 Ø x 25 ba", material: "Fibrocemento", pintada: false, precio: 25840, litros: null, peso_kg: null },
@@ -560,7 +508,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Misionera Recta", medidas: "40h x 35Ø x 40b", material: "Fibrocemento", pintada: false, precio: 35100, litros: null, peso_kg: null },
   { articulo: "Misionera Recta", medidas: "55h x 35Ø x 40b", material: "Fibrocemento", pintada: false, precio: 39600, litros: null, peso_kg: null },
   { articulo: "Misionera Recta", medidas: "70h x 35Ø x 40b", material: "Fibrocemento", pintada: false, precio: 53100, litros: null, peso_kg: null },
-  // ROTOMOLDEADO
   { articulo: "Misionera", medidas: "20h x 15Ø x 20b", material: "Rotomoldeado", pintada: true, precio: 10550, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "30h x 23Ø x 28b", material: "Rotomoldeado", pintada: true, precio: 24220, litros: null, peso_kg: null },
   { articulo: "Misionera Lisa", medidas: "38h x 28Ø x 20b", material: "Rotomoldeado", pintada: true, precio: 44040, litros: null, peso_kg: null },
@@ -608,7 +555,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Jardinera", medidas: "80x27x30", material: "Rotomoldeado", pintada: true, precio: 70380, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "100x20x20", material: "Rotomoldeado", pintada: true, precio: 53240, litros: null, peso_kg: null },
   { articulo: "Jardinera", medidas: "100x27x30", material: "Rotomoldeado", pintada: true, precio: 87310, litros: null, peso_kg: null },
-  // FIBRA DE VIDRIO
   { articulo: "Misionera", medidas: "29h x 27Ø x 20b", material: "Fibra de Vidrio", pintada: true, precio: 142320, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "39h x 37Ø x 20b", material: "Fibra de Vidrio", pintada: true, precio: 197880, litros: null, peso_kg: null },
   { articulo: "Misionera", medidas: "50h x 47Ø x 32b", material: "Fibra de Vidrio", pintada: true, precio: 248770, litros: null, peso_kg: null },
@@ -616,7 +562,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Cuenco", medidas: "40h x 50Ø x 40b", material: "Fibra de Vidrio", pintada: true, precio: 180430, litros: null, peso_kg: null },
   { articulo: "Cuenco", medidas: "45h x 45Ø x 40b", material: "Fibra de Vidrio", pintada: true, precio: 180430, litros: null, peso_kg: null },
   { articulo: "Cuenco", medidas: "50h x 60Ø x 45b", material: "Fibra de Vidrio", pintada: true, precio: 265890, litros: null, peso_kg: null },
-  // CERÁMICA
   { articulo: "Coco N°1", medidas: "10h x 11d x 8b", material: "Cerámica", pintada: false, precio: 26020, litros: null, peso_kg: null },
   { articulo: "Coco N°2", medidas: "14h x 14d x 11b", material: "Cerámica", pintada: false, precio: 39960, litros: null, peso_kg: null },
   { articulo: "Coco N°3", medidas: "18h x 17d x 14b", material: "Cerámica", pintada: false, precio: 71410, litros: null, peso_kg: null },
@@ -643,7 +588,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Yucatan Baja", medidas: "6h x 40l x 24a", material: "Cerámica", pintada: false, precio: 37740, litros: null, peso_kg: null },
   { articulo: "Yucatan Alta", medidas: "12h x 43l x 26a", material: "Cerámica", pintada: false, precio: 54580, litros: null, peso_kg: null },
   { articulo: "Fascetadas", medidas: "10h x 8d x 6b", material: "Cerámica", pintada: false, precio: 14730, litros: null, peso_kg: null },
-  // PLÁSTICO
   { articulo: "Plato Nº10", medidas: "Nº10", material: "Plástico", pintada: false, precio: 890, litros: null, peso_kg: null },
   { articulo: "Plato Nº12", medidas: "Nº12", material: "Plástico", pintada: false, precio: 890, litros: null, peso_kg: null },
   { articulo: "Plato Nº14", medidas: "Nº14", material: "Plástico", pintada: false, precio: 890, litros: null, peso_kg: null },
@@ -667,7 +611,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Plato Cuadrado Nº40", medidas: "Nº40", material: "Plástico", pintada: false, precio: 9880, litros: null, peso_kg: null },
   { articulo: "Maceta Diamante N19", medidas: "N°19", material: "Plástico", pintada: false, precio: 4220, litros: null, peso_kg: null },
   { articulo: "Premium Clásica *12", medidas: "*12", material: "Plástico", pintada: false, precio: 2400, litros: null, peso_kg: null },
-  // ALEJANDRA — Rotomoldeado (minorista)
   { articulo: "Cubo", medidas: "30x30", material: "Rotomoldeado", pintada: true, precio: 25500, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "35x35", material: "Rotomoldeado", pintada: true, precio: 38000, litros: null, peso_kg: null },
   { articulo: "Cubo", medidas: "40x40", material: "Rotomoldeado", pintada: true, precio: 55500, litros: null, peso_kg: null },
@@ -688,7 +631,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "Paris", medidas: "30cm", material: "Rotomoldeado", pintada: true, precio: 42500, litros: null, peso_kg: null },
   { articulo: "Paris", medidas: "44cm", material: "Rotomoldeado", pintada: true, precio: 52500, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Misionera Texturada", medidas: "30cm + 40cm", material: "Combo", pintada: false, precio: 59000, litros: null, peso_kg: null },
-  // SANTO BENITO — Rotomoldeado (lista 11/4/26)
   { articulo: "Copa SB", medidas: "20cm c/plato", material: "Rotomoldeado", pintada: true, precio: 9890, litros: null, peso_kg: null },
   { articulo: "Copa SB", medidas: "30cm c/plato", material: "Rotomoldeado", pintada: true, precio: 21560, litros: null, peso_kg: null },
   { articulo: "Copa SB", medidas: "40cm", material: "Rotomoldeado", pintada: true, precio: 55880, litros: null, peso_kg: null },
@@ -704,14 +646,12 @@ window.LYL_PRODUCTOS = [
   { articulo: "Salteña SB", medidas: "40cm c/plato", material: "Rotomoldeado", pintada: true, precio: 39400, litros: null, peso_kg: null },
   { articulo: "Salteña SB", medidas: "55cm c/plato", material: "Rotomoldeado", pintada: true, precio: 82000, litros: null, peso_kg: null },
   { articulo: "Salteña SB", medidas: "70cm c/plato", material: "Rotomoldeado", pintada: true, precio: 124640, litros: null, peso_kg: null },
-  // COMBOS SANTO BENITO
   { articulo: "🎁 Combo Copa Trío", medidas: "Copa 40 + 50 + 60cm", material: "Combo", pintada: false, precio: 234000, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Misionera Trío", medidas: "Misionera 40 + 55 + 70cm c/plato", material: "Combo", pintada: false, precio: 191500, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Salteña Trío", medidas: "Salteña 40 + 55 + 70cm c/plato", material: "Combo", pintada: false, precio: 200000, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Entrada", medidas: "2× Misionera 55cm + Copa 40cm", material: "Combo", pintada: false, precio: 179000, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Terraza", medidas: "2× Copa 50cm + Cuenco 32cm", material: "Combo", pintada: false, precio: 205500, litros: null, peso_kg: null },
   { articulo: "🎁 Combo Living", medidas: "2× Misionera 70cm + Misionera 40cm", material: "Combo", pintada: false, precio: 204000, litros: null, peso_kg: null },
-  // FIBROCEMENTO — San Jorge (nuevos modelos)
   { articulo: "MISIONERA N50 *35 *30 NUEVA", medidas: "", material: "Fibrocemento", pintada: false, precio: 26010, litros: null, peso_kg: null },
   { articulo: "PLATO TAZA X 1MTS", medidas: "", material: "Fibrocemento", pintada: false, precio: 34890, litros: null, peso_kg: null },
   { articulo: "CONO PANAL 60CM", medidas: "", material: "Fibrocemento", pintada: false, precio: 28310, litros: null, peso_kg: null },
@@ -822,7 +762,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "CALI N40 LU", medidas: "", material: "Fibrocemento", pintada: false, precio: 49310, litros: null, peso_kg: null },
   { articulo: "CALI LU N77", medidas: "", material: "Fibrocemento", pintada: false, precio: 70040, litros: null, peso_kg: null },
   { articulo: "CALI LU N56", medidas: "", material: "Fibrocemento", pintada: false, precio: 50670, litros: null, peso_kg: null },
-  // PLÁSTICO — MATRI y T.A
   { articulo: "PLATO P/JARD.8020 CM.", medidas: "", material: "Plástico", pintada: false, precio: 11740, litros: null, peso_kg: null },
   { articulo: "PLATO P/JARD.IMPERIO Nº60", medidas: "", material: "Plástico", pintada: false, precio: 5130, litros: null, peso_kg: null },
   { articulo: "PLATO P/JARD.IMPERIO Nº80", medidas: "", material: "Plástico", pintada: false, precio: 14400, litros: null, peso_kg: null },
@@ -947,7 +886,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "PREMIUM CONICA *16", medidas: "", material: "Plástico", pintada: false, precio: 2030, litros: null, peso_kg: null },
   { articulo: "PREMIUM CONICA *20", medidas: "", material: "Plástico", pintada: false, precio: 3230, litros: null, peso_kg: null },
   { articulo: "REDONDA PREMIUM 35", medidas: "", material: "Plástico", pintada: false, precio: 18750, litros: null, peso_kg: null },
-  // ROTOMOLDEADO — RAYUM Andina
   { articulo: "ANDINA N27 RUSTICA", medidas: "", material: "Rotomoldeado", pintada: true, precio: 24960, litros: null, peso_kg: null },
   { articulo: "ANDINA N80 LISO", medidas: "", material: "Rotomoldeado", pintada: true, precio: 255540, litros: null, peso_kg: null },
   { articulo: "ANDINA N40 RUSTICA", medidas: "", material: "Rotomoldeado", pintada: true, precio: 54440, litros: null, peso_kg: null },
@@ -957,7 +895,6 @@ window.LYL_PRODUCTOS = [
   { articulo: "ANDINA N40 LISO", medidas: "", material: "Rotomoldeado", pintada: true, precio: 47340, litros: null, peso_kg: null },
   { articulo: "ANDINA N50 LISO", medidas: "", material: "Rotomoldeado", pintada: true, precio: 80800, litros: null, peso_kg: null },
   { articulo: "ANDINA N65 LISO", medidas: "", material: "Rotomoldeado", pintada: true, precio: 160140, litros: null, peso_kg: null },
-  // INSUMOS
   { articulo: "GUANO MURCIELAGO X 250  GRS", medidas: "", material: "Insumos", pintada: false, precio: 13450, litros: null, peso_kg: null },
   { articulo: "PARAISO ORUGUICIDA X 100CC", medidas: "", material: "Insumos", pintada: false, precio: 10650, litros: null, peso_kg: null },
   { articulo: "BTI LARVICIDA INSECTICIDA BIOLOGICO * 30 cc", medidas: "", material: "Insumos", pintada: false, precio: 3720, litros: null, peso_kg: null },
@@ -1273,5 +1210,5 @@ window.LYL_PRODUCTOS = [
   { articulo: "DROP RESIDUAL X 100CC", medidas: "", material: "Insumos", pintada: false, precio: 4060, litros: null, peso_kg: null },
   { articulo: "DROP DERRIBANTE X 100CC", medidas: "", material: "Insumos", pintada: false, precio: 5270, litros: null, peso_kg: null },
   { articulo: "DROP PASTA RATICIDA", medidas: "", material: "Insumos", pintada: false, precio: 6140, litros: null, peso_kg: null },
-  { articulo: "MUSGO BOLSA 25DM", medidas: "", material: "Insumos", pintada: false, precio: 9980, litros: null, peso_kg: null },
+  { articulo: "MUSGO BOLSA 25DM", medidas: "", material: "Insumos", pintada: false, precio: 9980, litros: null, peso_kg: null }
 ];
