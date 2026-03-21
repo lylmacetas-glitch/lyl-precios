@@ -1503,6 +1503,30 @@ function App() {
 
   const generarTextoGrupo = (g) => `🌿 *${g.articulo}* — ${g.material}${g.pintada ? " (pintada)" : " (sin pintar)"}\n${g.variantes.map(v => `  • ${v.medidas} → ${formatPrecio(v.precio)}`).join("\n")}`;
 
+
+  const compartirCategoria = () => {
+    const items = gruposBuscar;
+    if (items.length === 0) { alert("No hay productos con los filtros actuales."); return; }
+    // Título dinámico según filtros activos
+    const partes = [];
+    if (material !== "Todos") partes.push(material);
+    if (pintada !== "Todos") partes.push(pintada.toLowerCase());
+    if (buscar) partes.push(`"${buscar}"`);
+    const titulo = partes.length > 0 ? partes.join(" · ") : "Catálogo completo";
+    let txt = `🌿 *LyL Macetas — ${titulo}*\n`;
+    txt += `Fecha: ${new Date().toLocaleDateString("es-AR")}\n\n`;
+    items.forEach(g => {
+      const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
+      txt += `*${g.articulo}*${ps}\n`;
+      g.variantes.forEach(v => {
+        txt += `  ${v.medidas ? v.medidas + " → " : ""}${formatPrecio(v.precio)}\n`;
+      });
+      txt += "\n";
+    });
+    txt += `_lylmacetas.com.ar · 11 5755-4899_`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, "_blank");
+  };
+
   // RENDER
   const headerEl = e('div', { style: { background: "#ffffff", borderBottom: "2px solid #e8e4de", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" } },
     e('div', null,
@@ -1553,6 +1577,17 @@ function App() {
         }, p)
       )
     ),
+    // Botón compartir categoría
+    gruposBuscar.length > 0 && e('button', {
+      onClick: compartirCategoria,
+      style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #2c5f7a", background: "transparent", color: "#2c5f7a", cursor: "pointer", fontSize: 12, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }
+    }, (() => {
+            const partes = [];
+            if (material !== "Todos") partes.push(material);
+            if (pintada !== "Todos") partes.push(pintada.toLowerCase());
+            if (buscar) partes.push(`"${buscar}"`);
+            return "📲 Compartir " + (partes.length > 0 ? partes.join(" · ") : "catálogo") + " por WhatsApp";
+          })()),
     // Resultados
     gruposBuscar.length === 0
       ? e('div', { style: { textAlign: "center", color: "#555", padding: 30 } }, "Sin resultados")
