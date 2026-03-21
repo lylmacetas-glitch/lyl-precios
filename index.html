@@ -11,6 +11,7 @@
     body { background: #f8f6f2; font-family: 'Helvetica Neue', Arial, sans-serif; }
     input:focus { border-color: #4a7c59 !important; box-shadow: 0 0 0 2px rgba(74,124,89,0.15); }
     button { font-family: inherit; }
+    select { font-family: inherit; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #f0ede8; }
     ::-webkit-scrollbar-thumb { background: #c8c4be; border-radius: 2px; }
@@ -1367,6 +1368,13 @@ function App() {
   const [notaTemp, setNotaTemp] = useState("");
   const [confirmarVaciar, setConfirmarVaciar] = useState(false);
   const [modoCompartir, setModoCompartir] = useState(false);
+  const [vistaAdmin, setVistaAdmin] = useState(false);
+  const [passInput, setPassInput] = useState("");
+  const [adminOk, setAdminOk] = useState(false);
+  const [catalogoEdit, setCatalogoEdit] = useState(null);
+  const [editando, setEditando] = useState(null);
+  const [formEdit, setFormEdit] = useState({});
+  const [buscarAdmin, setBuscarAdmin] = useState("");
   const [seleccionados, setSeleccionados] = useState({});
 
   const setP = setPresupuesto;
@@ -1538,6 +1546,35 @@ function App() {
     setModoCompartir(false);
   };
 
+
+  const exportarCatalogo = () => {
+    const cat = catalogoEdit || window.LYL_PRODUCTOS;
+    const lineas = cat.map(p => 
+      `  { articulo: ${JSON.stringify(p.articulo)}, medidas: ${JSON.stringify(p.medidas)}, material: ${JSON.stringify(p.material)}, pintada: ${p.pintada}, precio: ${p.precio}, litros: ${p.litros}, peso_kg: ${p.peso_kg} }`
+    );
+    const contenido = `window.LYL_PRODUCTOS = [\n${lineas.join(",\n")}\n];`;
+    const blob = new Blob([contenido], { type: "text/javascript" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "productosmin.js"; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const guardarEdicion = () => {
+    const cat = catalogoEdit || [...window.LYL_PRODUCTOS];
+    const idx = cat.findIndex((p, i) => i === editando);
+    if (idx === -1) return;
+    cat[idx] = { ...cat[idx], ...formEdit, precio: Number(formEdit.precio) || cat[idx].precio };
+    setCatalogoEdit([...cat]);
+    setEditando(null);
+  };
+
+  const eliminarProducto = (idx) => {
+    const cat = [...(catalogoEdit || window.LYL_PRODUCTOS)];
+    cat.splice(idx, 1);
+    setCatalogoEdit([...cat]);
+  };
+
   // RENDER
   const headerEl = e('div', { style: { background: "#ffffff", borderBottom: "2px solid #e8e4de", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" } },
     e('div', null,
@@ -1548,7 +1585,7 @@ function App() {
   );
 
   const tabsEl = e('div', { style: { display: "flex", borderBottom: "1px solid #e8e4de", background: "#f0ede8" } },
-    [["buscar", "🔍 Buscar"], ["presupuesto", "🧾 Presupuesto"]].map(([k, label]) =>
+    [["buscar", "🔍 Buscar"], ["presupuesto", "🧾 Presupuesto"], ["admin", "⚙️ Admin"]].map(([k, label]) =>
       e('button', {
         key: k,
         onClick: () => setVista(k),
@@ -1606,6 +1643,77 @@ function App() {
           const dc = matColors[grupo.material] || "#888";
           const ps = grupo.material === "Barro" ? "" : (grupo.pintada ? "pintada" : "sin pintar");
         
+
+  // Vista Admin
+  const vistaAdminEl = e('div', { style: { padding: "16px 14px" } },
+    !adminOk
+      ? e('div', { style: { maxWidth: 300, margin: "40px auto", textAlign: "center" } },
+          e('div', { style: { fontSize: 32, marginBottom: 16 } }, "🔒"),
+          e('div', { style: { fontSize: 15, color: "#2c2c2c", marginBottom: 16, fontWeight: "bold" } }, "Área administrativa"),
+          e('input', {
+            type: "password", placeholder: "Contraseña",
+            value: passInput, onChange: ev => setPassInput(ev.target.value),
+            onKeyDown: ev => ev.key === "Enter" && (passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta")),
+            style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 14, marginBottom: 10, textAlign: "center" }
+          }),
+          e('button', {
+            onClick: () => passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta"),
+            style: { width: "100%", padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
+          }, "Ingresar")
+        )
+      : e('div', null,
+          e('div', { style: { marginBottom: 12 } },
+            e('input', {
+              type: "text", placeholder: "Buscar producto...",
+              value: buscarAdmin, onChange: ev => setBuscarAdmin(ev.target.value),
+              style: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13 }
+            })
+          ),
+          e('div', { style: { display: "flex", gap: 8, marginBottom: 14 } },
+            e('button', {
+              onClick: exportarCatalogo,
+              style: { flex: 1, padding: "10px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
+            }, "💾 Exportar catálogo"),
+            catalogoEdit && e('div', { style: { fontSize: 10, color: "#e07b39", display: "flex", alignItems: "center", padding: "0 8px" } }, "⚠️ Hay cambios sin exportar")
+          ),
+          (catalogoEdit || window.LYL_PRODUCTOS)
+            .map((p, i) => ({ ...p, _idx: i }))
+            .filter(p => !buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase()))
+            .map((p) => {
+              const i = p._idx;
+              return editando === i
+                ? e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: 12, marginBottom: 8, border: "2px solid #4a7c59" } },
+                    e('input', { value: formEdit.articulo || "", onChange: ev => setFormEdit(f => ({...f, articulo: ev.target.value})), placeholder: "Nombre", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('input', { value: formEdit.medidas || "", onChange: ev => setFormEdit(f => ({...f, medidas: ev.target.value})), placeholder: "Medidas", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('input', { type: "number", value: formEdit.precio || "", onChange: ev => setFormEdit(f => ({...f, precio: ev.target.value})), placeholder: "Precio", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('select', { value: formEdit.material || "", onChange: ev => setFormEdit(f => ({...f, material: ev.target.value})), style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 10, fontSize: 13, background: "#fff" } },
+                      MATERIALES.filter(m => m !== "Todos").map(m => e('option', { key: m, value: m }, m))
+                    ),
+                    e('div', { style: { display: "flex", gap: 8 } },
+                      e('button', { onClick: guardarEdicion, style: { flex: 1, padding: "9px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Guardar"),
+                      e('button', { onClick: () => setEditando(null), style: { padding: "9px 14px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 13 } }, "Cancelar")
+                    )
+                  )
+                : e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #ede9e3", display: "flex", justifyContent: "space-between", alignItems: "center" } },
+                    e('div', { style: { flex: 1 } },
+                      e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, p.articulo + (p.medidas ? " " + p.medidas : "")),
+                      e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } }, p.material + " · " + formatPrecio(p.precio))
+                    ),
+                    e('div', { style: { display: "flex", gap: 6 } },
+                      e('button', {
+                        onClick: () => { setEditando(i); setFormEdit({ articulo: p.articulo, medidas: p.medidas, precio: p.precio, material: p.material }); },
+                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 12 }
+                      }, "✏️"),
+                      e('button', {
+                        onClick: () => { if (window.confirm("¿Eliminar " + p.articulo + "?")) eliminarProducto(i); },
+                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #fde", background: "transparent", color: "#c0392b", cursor: "pointer", fontSize: 12 }
+                      }, "🗑")
+                    )
+                  );
+            })
+        )
+  );
+
   // Modal selección para compartir
   const modalCompartirEl = modoCompartir && e('div', {
     style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
@@ -1848,6 +1956,77 @@ function App() {
   );
 
 
+
+  // Vista Admin
+  const vistaAdminEl = e('div', { style: { padding: "16px 14px" } },
+    !adminOk
+      ? e('div', { style: { maxWidth: 300, margin: "40px auto", textAlign: "center" } },
+          e('div', { style: { fontSize: 32, marginBottom: 16 } }, "🔒"),
+          e('div', { style: { fontSize: 15, color: "#2c2c2c", marginBottom: 16, fontWeight: "bold" } }, "Área administrativa"),
+          e('input', {
+            type: "password", placeholder: "Contraseña",
+            value: passInput, onChange: ev => setPassInput(ev.target.value),
+            onKeyDown: ev => ev.key === "Enter" && (passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta")),
+            style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 14, marginBottom: 10, textAlign: "center" }
+          }),
+          e('button', {
+            onClick: () => passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta"),
+            style: { width: "100%", padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
+          }, "Ingresar")
+        )
+      : e('div', null,
+          e('div', { style: { marginBottom: 12 } },
+            e('input', {
+              type: "text", placeholder: "Buscar producto...",
+              value: buscarAdmin, onChange: ev => setBuscarAdmin(ev.target.value),
+              style: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13 }
+            })
+          ),
+          e('div', { style: { display: "flex", gap: 8, marginBottom: 14 } },
+            e('button', {
+              onClick: exportarCatalogo,
+              style: { flex: 1, padding: "10px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
+            }, "💾 Exportar catálogo"),
+            catalogoEdit && e('div', { style: { fontSize: 10, color: "#e07b39", display: "flex", alignItems: "center", padding: "0 8px" } }, "⚠️ Hay cambios sin exportar")
+          ),
+          (catalogoEdit || window.LYL_PRODUCTOS)
+            .map((p, i) => ({ ...p, _idx: i }))
+            .filter(p => !buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase()))
+            .map((p) => {
+              const i = p._idx;
+              return editando === i
+                ? e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: 12, marginBottom: 8, border: "2px solid #4a7c59" } },
+                    e('input', { value: formEdit.articulo || "", onChange: ev => setFormEdit(f => ({...f, articulo: ev.target.value})), placeholder: "Nombre", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('input', { value: formEdit.medidas || "", onChange: ev => setFormEdit(f => ({...f, medidas: ev.target.value})), placeholder: "Medidas", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('input', { type: "number", value: formEdit.precio || "", onChange: ev => setFormEdit(f => ({...f, precio: ev.target.value})), placeholder: "Precio", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
+                    e('select', { value: formEdit.material || "", onChange: ev => setFormEdit(f => ({...f, material: ev.target.value})), style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 10, fontSize: 13, background: "#fff" } },
+                      MATERIALES.filter(m => m !== "Todos").map(m => e('option', { key: m, value: m }, m))
+                    ),
+                    e('div', { style: { display: "flex", gap: 8 } },
+                      e('button', { onClick: guardarEdicion, style: { flex: 1, padding: "9px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Guardar"),
+                      e('button', { onClick: () => setEditando(null), style: { padding: "9px 14px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 13 } }, "Cancelar")
+                    )
+                  )
+                : e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #ede9e3", display: "flex", justifyContent: "space-between", alignItems: "center" } },
+                    e('div', { style: { flex: 1 } },
+                      e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, p.articulo + (p.medidas ? " " + p.medidas : "")),
+                      e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } }, p.material + " · " + formatPrecio(p.precio))
+                    ),
+                    e('div', { style: { display: "flex", gap: 6 } },
+                      e('button', {
+                        onClick: () => { setEditando(i); setFormEdit({ articulo: p.articulo, medidas: p.medidas, precio: p.precio, material: p.material }); },
+                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 12 }
+                      }, "✏️"),
+                      e('button', {
+                        onClick: () => { if (window.confirm("¿Eliminar " + p.articulo + "?")) eliminarProducto(i); },
+                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #fde", background: "transparent", color: "#c0392b", cursor: "pointer", fontSize: 12 }
+                      }, "🗑")
+                    )
+                  );
+            })
+        )
+  );
+
   // Modal selección para compartir
   const modalCompartirEl = modoCompartir && e('div', {
     style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
@@ -1901,7 +2080,7 @@ function App() {
     headerEl,
     tabsEl,
     e('div', { style: { overflowY: "auto" } },
-      vista === "buscar" ? vistaBuscar : vistaPresupuesto
+      vista === "buscar" ? vistaBuscar : vista === "presupuesto" ? vistaPresupuesto : vistaAdminEl
     ),
     modalEl,
     confirmarEl,
