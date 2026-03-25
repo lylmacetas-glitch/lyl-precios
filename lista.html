@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LyL Macetas — Lista de Precios</title>
+  <title>LyL Macetas — Catálogo de Precios</title>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <style>
@@ -1338,185 +1338,53 @@ window.LYL_PRODUCTOS = [
   { articulo: "Cactus y Suculentas Ferticam", medidas: "5 DM", material: "Insumos", pintada: false, precio: 5890, litros: null, peso_kg: null },
   { articulo: "Cactus y Suculentas Ferticam", medidas: "10 DM", material: "Insumos", pintada: false, precio: 7220, litros: null, peso_kg: null },
 ];
+// ══════════════════════════════════════════════
+// LyL Macetas — Lista Pública para Clientes
+// ══════════════════════════════════════════════
+
 const { useState, useMemo } = React;
+const e = React.createElement;
 
 const productos = window.LYL_PRODUCTOS;
-
-const MATERIALES = ["Todos", "Barro", "Barro Artesanal", "Fibrocemento", "Rotomoldeado", "Fibra de Vidrio", "Cerámica", "Plástico", "Combo", "Insumos"];
-const MATERIALES_MANUAL = ["Fibrocemento", "Rotomoldeado", "Fibra de Vidrio", "Barro", "Barro Artesanal", "Cerámica", "Plástico", "Botánica", "Sustrato", "Insumos", "Combo", "Otros"];
-
-const formatPrecio = (n) => "$\u00a0" + n.toLocaleString("es-AR", { minimumFractionDigits: 0 });
-const WA_NUMBER = "5491157554899";
-const STORAGE_KEY = "lyl_presup_v2";
 const FECHA_LISTA = "24-mar-2026";
+const WA_NUMBER = "5491157554899";
+
+const MATERIALES = ["Todos", "Barro", "Barro Artesanal", "Fibrocemento", "Rotomoldeado", "Fibra de Vidrio", "Cerámica", "Plástico"];
 
 const matColors = {
   Barro: "#b5651d", "Barro Artesanal": "#8B4513",
   Fibrocemento: "#607d8b", Rotomoldeado: "#2e7d32",
   "Fibra de Vidrio": "#1565c0", Cerámica: "#ad1457",
-  Plástico: "#6a1f8a", Botánica: "#388e3c",
-  Sustrato: "#795548", Combo: "#c8860a",
-  Insumos: "#0d7377", Otros: "#7c5c20", Manual: "#7c5c20"
+  Plástico: "#6a1f8a",
 };
 
-const GRN = "#4a7c59"; const GRN_XL = "#2d5a3d"; const GRN_LT = "#6b9e7a";
-const GRN_MNT = "#4a7c59"; const GRN_OSC = "#f8f6f2"; const GRN_MED = "#4a7c59";
+const formatPrecio = (n) => "$\u00a0" + n.toLocaleString("es-AR", { minimumFractionDigits: 0 });
 
-const getNextNumero = () => {
-  try {
-    const n = parseInt(localStorage.getItem("lyl_num") || "0", 10) + 1;
-    localStorage.setItem("lyl_num", String(n));
-    return "P-" + String(n).padStart(3, "0");
-  } catch { return "P-" + String(Date.now()).slice(-3); }
-};
-
-const loadBorrador = () => {
-  try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : null; }
-  catch { return null; }
-};
-const saveBorrador = (data) => {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
-};
-const clearBorrador = () => {
-  try { localStorage.removeItem(STORAGE_KEY); } catch {}
-};
-
-const e = React.createElement;
+// Colores marca
+const VERDE = "#4a7c59";
+const VERDE_OSC = "#2d5a3d";
+const CREMA = "#f8f6f2";
 
 const S = {
-  input: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", background: "#f5f3ef", color: "#555", fontSize: 13, outline: "none" },
-  pill: (c) => ({ display: "inline-block", padding: "1px 7px", borderRadius: 10, background: c + "22", color: c, fontSize: 10, border: `1px solid ${c}44` }),
+  input: { width: "100%", padding: "9px 12px", borderRadius: 8, border: "1px solid #ddd", background: "#fff", color: "#333", fontSize: 13, outline: "none", fontFamily: "inherit" },
 };
 
 function App() {
-  const b = loadBorrador();
-  const [vista, setVista] = useState("buscar");
   const [buscar, setBuscar] = useState("");
   const [material, setMaterial] = useState("Todos");
   const [pintada, setPintada] = useState("Todos");
-  const [presupuesto, setPresupuesto] = useState(b?.presupuesto || []);
-  const [cliente, setCliente] = useState(b?.cliente || "");
-  const [proyecto, setProyecto] = useState(b?.proyecto || "");
-  const [envio, setEnvio] = useState(b?.envio || "");
-  const [descuento, setDescuento] = useState(b?.descuento || "");
-  const [numPresup, setNumPresup] = useState(b?.numPresup || "");
-  const [mostrarAnticipo, setMostrarAnticipo] = useState(b?.mostrarAnticipo ?? true);
-  const [textoVisible, setTextoVisible] = useState(null);
-  const [modalAbierto, setModalAbierto] = useState(false);
-  const [formManual, setFormManual] = useState({ articulo: "", medidas: "", precio: "", nota: "", material: "Otros" });
-  const [editandoKey, setEditandoKey] = useState(null);
-  const [notaAbierta, setNotaAbierta] = useState(null);
-  const [notaTemp, setNotaTemp] = useState("");
-  const [confirmarVaciar, setConfirmarVaciar] = useState(false);
-  const [modalImportarCliente, setModalImportarCliente] = useState(false);
-  const [textoImport, setTextoImport] = useState("");
-  const [historial, setHistorial] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("lyl_historial") || "[]"); } catch { return []; }
-  });
-  const [modoCompartir, setModoCompartir] = useState(false);
-  const [vistaAdmin, setVistaAdmin] = useState(false);
-  const [passInput, setPassInput] = useState("");
-  const [adminOk, setAdminOk] = useState(false);
-  const [catalogoEdit, setCatalogoEdit] = useState(null);
-  const [editando, setEditando] = useState(null);
-  const [formEdit, setFormEdit] = useState({});
-  const [buscarAdmin, setBuscarAdmin] = useState("");
-  const [selAdmin, setSelAdmin] = useState({});
-  const [modoSelAdmin, setModoSelAdmin] = useState(false);
-  const [seleccionados, setSeleccionados] = useState({});
+  const [carrito, setCarrito] = useState({});
+  const [nombre, setNombre] = useState("");
+  const [nota, setNota] = useState("");
+  const [vista, setVista] = useState("catalogo"); // catalogo | pedido
+  const [enviado, setEnviado] = useState(false);
 
-  const setP = setPresupuesto;
-
-  const save = (extra = {}) => {
-    saveBorrador({ presupuesto, cliente, proyecto, envio, descuento, numPresup, mostrarAnticipo, ...extra });
-  };
-
-  const agregar = (prod) => {
-    asignarNum();
-    const key = `${prod.articulo}||${prod.medidas}||${prod.material}||${prod.pintada}||${Date.now()}`;
-    setP(prev => {
-      const existe = prev.find(i => i.articulo === prod.articulo && i.medidas === prod.medidas && i.material === prod.material && i.pintada === prod.pintada);
-      if (existe) {
-        const nuevo = prev.map(i => i.key === existe.key ? { ...i, cantidad: i.cantidad + 1 } : i);
-        saveBorrador({ presupuesto: nuevo, cliente, proyecto, envio, descuento, numPresup, mostrarAnticipo });
-        return nuevo;
-      }
-      const nuevo = [...prev, { ...prod, key, cantidad: 1, nota: "", sinDescuento: false }];
-      saveBorrador({ presupuesto: nuevo, cliente, proyecto, envio, descuento, numPresup, mostrarAnticipo });
-      return nuevo;
-    });
-    setVista("presupuesto");
-  };
-
-  const quitar = (key) => setP(prev => prev.filter(i => i.key !== key));
-  const toggleSinDescuento = (key) => setP(prev => prev.map(i => i.key === key ? { ...i, sinDescuento: !i.sinDescuento } : i));
-  const guardarNota = (key) => { setP(prev => prev.map(i => i.key === key ? { ...i, nota: notaTemp } : i)); setNotaAbierta(null); };
-
-  const abrirModalNuevo = () => { setFormManual({ articulo: "", medidas: "", precio: "", nota: "", material: "Otros" }); setEditandoKey(null); setModalAbierto(true); };
-
-  const guardarManual = () => {
-    const pr = parseFloat(String(formManual.precio).replace(/[^\d.]/g, "")) || 0;
-    if (!formManual.articulo.trim() || !pr) return;
-    const key = editandoKey || `manual||${Date.now()}`;
-    const item = { articulo: formManual.articulo.trim(), medidas: formManual.medidas.trim(), material: formManual.material || "Manual", pintada: false, precio: pr, key, cantidad: 1, nota: formManual.nota.trim() };
-    if (editandoKey) setP(prev => prev.map(i => i.key === editandoKey ? { ...i, ...item, cantidad: i.cantidad } : i));
-    else setP(prev => [...prev, item]);
-    setModalAbierto(false);
-  };
-
-  const vaciar = () => { setPresupuesto([]); setCliente(""); setProyecto(""); setEnvio(""); setDescuento(""); setNumPresup(""); setTextoVisible(null); clearBorrador(); setConfirmarVaciar(false); };
-
-  const asignarNum = () => { if (numPresup) return; const n = getNextNumero(); setNumPresup(n); save({ numPresup: n }); };
-
-  const exportarBorrador = () => {
-    const estado = { presupuesto, cliente, proyecto, envio, descuento, numPresup, mostrarAnticipo };
-    const nombre = [numPresup, cliente].filter(Boolean).join("_").replace(/\s+/g, "_") || "borrador";
-    const blob = new Blob([JSON.stringify(estado, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = `LyL_${nombre}.json`; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const importarBorrador = (ev) => {
-    const file = ev.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e2) => {
-      try {
-        const d = JSON.parse(e2.target.result);
-        if (!d.presupuesto) { alert("El archivo no es un borrador válido."); return; }
-        setPresupuesto(d.presupuesto || []);
-        setCliente(d.cliente || "");
-        setProyecto(d.proyecto || "");
-        setEnvio(d.envio || "");
-        setDescuento(d.descuento || "");
-        setNumPresup(d.numPresup || "");
-        setMostrarAnticipo(d.mostrarAnticipo ?? true);
-        saveBorrador(d);
-        setVista("presupuesto");
-      } catch { alert("Error al leer el archivo."); }
-    };
-    reader.readAsText(file);
-    ev.target.value = "";
-  };
-
-  // Cálculos
-  const envioNum = parseFloat(String(envio).replace(/[^\d.]/g, "")) || 0;
-  const descPct = parseFloat(String(descuento).replace(/[^\d.]/g, "")) || 0;
-  const subtotal = presupuesto.reduce((s, i) => s + i.precio * i.cantidad, 0);
-  const baseParaDesc = presupuesto.filter(i => !i.sinDescuento).reduce((s, i) => s + i.precio * i.cantidad, 0);
-  const montoDesc = Math.round(baseParaDesc * descPct / 100);
-  const subtotalConDesc = subtotal - montoDesc;
-  const totalFinal = subtotalConDesc + envioNum;
-  const anticipo80 = Math.round(totalFinal * 0.8);
-  const saldo20 = totalFinal - anticipo80;
-  const hasBorrador = presupuesto.length > 0;
-
-  const gruposBuscar = useMemo(() => {
-    const b2 = buscar.toLowerCase();
-    const filtrados = productos.filter(p => {
-      const mB = !b2 || p.articulo.toLowerCase().includes(b2) || p.medidas.toLowerCase().includes(b2);
+  const productosFiltrados = useMemo(() => {
+    const b = buscar.toLowerCase();
+    const mats = MATERIALES.filter(m => m !== "Todos");
+    const prods = productos.filter(p => mats.includes(p.material));
+    const filtrados = prods.filter(p => {
+      const mB = !b || p.articulo.toLowerCase().includes(b) || p.medidas.toLowerCase().includes(b);
       const mM = material === "Todos" || p.material === material;
       const mP = pintada === "Todos" || (pintada === "Pintada" && p.pintada) || (pintada === "Sin pintar" && !p.pintada);
       return mB && mM && mP;
@@ -1525,795 +1393,210 @@ function App() {
     filtrados.forEach(p => {
       const k = `${p.articulo}||${p.material}||${p.pintada}`;
       if (!map[k]) map[k] = { ...p, variantes: [] };
-      map[k].variantes.push({ medidas: p.medidas, precio: p.precio, litros: p.litros, peso_kg: p.peso_kg });
+      map[k].variantes.push({ medidas: p.medidas, precio: p.precio });
     });
     return Object.values(map);
   }, [buscar, material, pintada]);
 
-  const generarTexto = () => {
-    let t = `🌿 *LyL Macetas* — Presupuesto ${numPresup || ""}\n`;
-    if (cliente) t += `Cliente: ${cliente}\n`;
-    if (proyecto) t += `Proyecto: ${proyecto}\n`;
-    t += `Fecha: ${new Date().toLocaleDateString("es-AR")}\n\n`;
-    const lineas2 = presupuesto.map(i => `  • ${i.articulo}${i.medidas ? " " + i.medidas : ""} — ${i.cantidad} u. × ${formatPrecio(i.precio)} = ${formatPrecio(i.precio * i.cantidad)}${i.nota ? "\n    _" + i.nota + "_" : ""}`);
-    t += lineas2.join("\n");
-    t += `\n\n*Subtotal: ${formatPrecio(subtotal)}*`;
-    if (descPct > 0) t += `\n🏷 Descuento ${descPct}%: -${formatPrecio(montoDesc)}`;
-    if (envioNum > 0) t += `\n🚚 Envío: ${formatPrecio(envioNum)}`;
-    t += `\n\n*TOTAL: ${formatPrecio(totalFinal)}*`;
-    if (mostrarAnticipo) t += `\n\n_Anticipo 80%: ${formatPrecio(anticipo80)}_\n_Saldo: ${formatPrecio(saldo20)}_`;
-    return t;
+  const totalItems = Object.values(carrito).reduce((s, v) => s + v.cantidad, 0);
+  const totalPrecio = Object.values(carrito).reduce((s, v) => s + v.precio * v.cantidad, 0);
+
+  const agregarItem = (prod, variante) => {
+    const key = `${prod.articulo}||${variante.medidas}||${prod.material}||${prod.pintada}`;
+    setCarrito(prev => ({
+      ...prev,
+      [key]: prev[key]
+        ? { ...prev[key], cantidad: prev[key].cantidad + 1 }
+        : { articulo: prod.articulo, medidas: variante.medidas, material: prod.material, pintada: prod.pintada, precio: variante.precio, cantidad: 1 }
+    }));
   };
 
-  const generarJson = () => {
-    const data = {
-      numero: numPresup, cliente, proyecto,
-      fecha: new Date().toLocaleDateString("es-AR"),
-      items: presupuesto.map(i => ({ articulo: i.articulo, medidas: i.medidas, material: i.material, cantidad: i.cantidad, precio: i.precio, total: i.precio * i.cantidad, nota: i.nota, sin_descuento: i.sinDescuento || false })),
-      subtotal, subtotal_con_descuento: subtotalConDesc,
-      descuento_pct: descPct, descuento_monto: montoDesc,
-      envio: envioNum, total: totalFinal,
-      anticipo_80: mostrarAnticipo ? anticipo80 : null,
-      saldo: mostrarAnticipo ? saldo20 : null
-    };
-    return JSON.stringify(data, null, 2);
-  };
-
-  const generarTextoGrupo = (g) => `🌿 *${g.articulo}* — ${g.material}${g.pintada ? " (pintada)" : " (sin pintar)"}\n${g.variantes.map(v => `  • ${v.medidas} → ${formatPrecio(v.precio)}`).join("\n")}`;
-
-
-  const abrirModoCompartir = () => {
-    if (gruposBuscar.length === 0) { alert("No hay productos con los filtros actuales."); return; }
-    // Seleccionar todos por defecto
-    const sel = {};
-    gruposBuscar.forEach((g, i) => { sel[i] = true; });
-    setSeleccionados(sel);
-    setModoCompartir(true);
-  };
-
-  const enviarSeleccion = () => {
-    const items = gruposBuscar.filter((g, i) => seleccionados[i]);
-    if (items.length === 0) { alert("Seleccioná al menos un producto."); return; }
-    const partes = [];
-    if (material !== "Todos") partes.push(material);
-    if (pintada !== "Todos") partes.push(pintada.toLowerCase());
-    if (buscar) partes.push(`"${buscar}"`);
-    const titulo = partes.length > 0 ? partes.join(" · ") : "Catálogo completo";
-    let txt = `🌿 *LyL Macetas — ${titulo}*\n`;
-    txt += `Fecha: ${new Date().toLocaleDateString("es-AR")}\n\n`;
-    items.forEach(g => {
-      const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
-      txt += `*${g.articulo}*${ps}\n`;
-      g.variantes.forEach(v => {
-        txt += `  ${v.medidas ? v.medidas + " → " : ""}${formatPrecio(v.precio)}\n`;
-      });
-      txt += "\n";
+  const cambiarCantidad = (key, delta) => {
+    setCarrito(prev => {
+      const item = prev[key];
+      if (!item) return prev;
+      const nueva = item.cantidad + delta;
+      if (nueva <= 0) {
+        const { [key]: _, ...resto } = prev;
+        return resto;
+      }
+      return { ...prev, [key]: { ...item, cantidad: nueva } };
     });
-    txt += `_lylmacetas.com.ar · 11 5755-4899_`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, "_blank");
-    setModoCompartir(false);
   };
 
+  const enviarPedido = () => {
+    if (!nombre.trim()) { alert("Por favor ingresá tu nombre antes de enviar."); return; }
+    if (Object.keys(carrito).length === 0) { alert("Seleccioná al menos un producto."); return; }
 
-  const eliminarSeleccionados = () => {
-    const cat = [...(catalogoEdit || window.LYL_PRODUCTOS)];
-    const indices = Object.keys(selAdmin).filter(k => selAdmin[k]).map(Number);
-    if (indices.length === 0) return;
-    const nuevo = cat.filter((p, i) => !indices.includes(i));
-    setCatalogoEdit(nuevo);
-    setSelAdmin({});
-    setModoSelAdmin(false);
+    const items = Object.values(carrito);
+    const fecha = new Date().toLocaleDateString("es-AR");
+
+    // Texto WhatsApp
+    let txt = `🌿 *Consulta de productos — LyL Macetas*\n`;
+    txt += `👤 *${nombre.trim()}*\n`;
+    txt += `📅 ${fecha}\n\n`;
+    txt += `*Productos de interés:*\n`;
+    items.forEach(i => {
+      txt += `  • ${i.articulo}${i.medidas ? " " + i.medidas : ""}${i.pintada ? " (pintada)" : ""} — ${i.cantidad} u.\n`;
+    });
+    if (nota.trim()) txt += `\n📝 *Nota:* ${nota.trim()}\n`;
+    txt += `\n_Consulta enviada desde lylmacetas.com.ar_\n\n`;
+
+    // JSON para importar al presupuesto
+    const json = JSON.stringify({
+      cliente: nombre.trim(),
+      fecha,
+      items: items.map(i => ({
+        articulo: i.articulo, medidas: i.medidas, material: i.material,
+        pintada: i.pintada, precio: i.precio, cantidad: i.cantidad,
+        total: i.precio * i.cantidad, nota: "", sin_descuento: false,
+        key: `${i.articulo}||${i.medidas}||${i.material}||${i.pintada}||importado`
+      })),
+      nota: nota.trim(),
+      subtotal: totalPrecio,
+    });
+    txt += `📋 *JSON para presupuesto:*\n${json}`;
+
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(txt)}`, "_blank");
+    setEnviado(true);
   };
 
-  const exportarCatalogo = () => {
-    const cat = catalogoEdit || window.LYL_PRODUCTOS;
-    const lineas = cat.map(p => 
-      `  { articulo: ${JSON.stringify(p.articulo)}, medidas: ${JSON.stringify(p.medidas)}, material: ${JSON.stringify(p.material)}, pintada: ${p.pintada}, precio: ${p.precio}, litros: ${p.litros}, peso_kg: ${p.peso_kg} }`
-    );
-    const contenido = `window.LYL_PRODUCTOS = [\n${lineas.join(",\n")}\n];`;
-    const blob = new Blob([contenido], { type: "text/javascript" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "productosmin.js"; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const guardarEdicion = () => {
-    const cat = catalogoEdit || [...window.LYL_PRODUCTOS];
-    const idx = cat.findIndex((p, i) => i === editando);
-    if (idx === -1) return;
-    cat[idx] = { ...cat[idx], ...formEdit, precio: Number(formEdit.precio) || cat[idx].precio };
-    setCatalogoEdit([...cat]);
-    setEditando(null);
-  };
-
-  const eliminarProducto = (idx) => {
-    const cat = [...(catalogoEdit || window.LYL_PRODUCTOS)];
-    cat.splice(idx, 1);
-    setCatalogoEdit([...cat]);
-  };
-
-
-  const importarPedidoCliente = (texto) => {
-    try {
-      // Buscar el JSON en el texto del WhatsApp
-      const match = texto.match(/\{[\s\S]*"items"[\s\S]*\}/);
-      if (!match) { alert("No se encontró un pedido válido en el texto."); return; }
-      const d = JSON.parse(match[0]);
-      if (!d.items) { alert("El pedido no tiene productos."); return; }
-      asignarNum();
-      const nuevosItems = d.items.map(i => ({
-        ...i,
-        key: i.key || `${i.articulo}||${i.medidas}||${i.material}||${i.pintada}||${Date.now()}`,
-        nota: i.nota || "",
-        sinDescuento: i.sin_descuento || false,
-      }));
-      setPresupuesto(nuevosItems);
-      if (d.cliente) setCliente(d.cliente);
-      saveBorrador({ presupuesto: nuevosItems, cliente: d.cliente || "", proyecto, envio, descuento, numPresup, mostrarAnticipo });
-      setVista("presupuesto");
-      setModalImportarCliente(false);
-      setTextoImport("");
-    } catch(err) {
-      alert("Error al procesar el pedido. Verificá que copiaste el JSON completo.");
-    }
-  };
-
-  // RENDER
-  const headerEl = e('div', { style: { background: "#ffffff", borderBottom: "2px solid #e8e4de", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" } },
+  // ── HEADER
+  const header = e('div', { style: { background: "#fff", borderBottom: "2px solid #e8e4de", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, zIndex: 100 } },
     e('div', null,
-      e('img', { src: "https://www.lylmacetas.com.ar/wp-content/uploads/2022/02/logo-02.svg", alt: "LyL Macetas", style: { height: 40, marginBottom: 4 } }),
-      e('div', { style: { fontSize: 10, color: GRN_MNT, marginTop: 2, letterSpacing: 1 } }, `Lista minorista · ${FECHA_LISTA}`)
+      e('img', { src: "https://www.lylmacetas.com.ar/wp-content/uploads/2022/02/logo-02.svg", alt: "LyL Macetas", style: { height: 36 } }),
+      e('div', { style: { fontSize: 10, color: "#888", marginTop: 3 } }, `Lista de precios · ${FECHA_LISTA}`)
     ),
-    presupuesto.length > 0 && e('div', { style: { background: GRN, borderRadius: 20, padding: "4px 12px", fontSize: 12, color: GRN_LT, fontWeight: "bold" } }, `${presupuesto.length} items`)
-  );
-
-  const tabsEl = e('div', { style: { display: "flex", borderBottom: "1px solid #e8e4de", background: "#f0ede8" } },
-    [["buscar", "🔍 Buscar"], ["presupuesto", "🧾 Presupuesto"], ["admin", "⚙️ Admin"]].map(([k, label]) =>
-      e('button', {
-        key: k,
-        onClick: () => setVista(k),
-        style: { flex: 1, padding: "11px 6px", border: "none", background: "transparent", color: vista === k ? GRN_XL : "#555", borderBottom: vista === k ? `2px solid ${GRN_XL}` : "2px solid transparent", fontSize: 13, cursor: "pointer", fontWeight: vista === k ? "bold" : "normal", position: "relative" }
-      },
-        label,
-        k === "presupuesto" && hasBorrador && e('div', { style: { position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", width: 7, height: 7, borderRadius: "50%", background: GRN_XL } })
-      )
+    totalItems > 0 && e('button', {
+      onClick: () => setVista(vista === "catalogo" ? "pedido" : "catalogo"),
+      style: { background: VERDE, border: "none", borderRadius: 20, padding: "7px 14px", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: "bold", display: "flex", alignItems: "center", gap: 6 }
+    },
+      vista === "catalogo" ? `🛒 Mi consulta (${totalItems})` : "← Seguir eligiendo"
     )
   );
 
-  // Vista Buscar
-  const vistaBuscar = e('div', { style: { padding: "12px 14px" } },
+  // ── CATÁLOGO
+  const catalogo = e('div', { style: { padding: "12px 14px" } },
+    e('div', { style: { background: "#f0f7f2", borderRadius: 10, padding: "10px 14px", marginBottom: 12, border: "1px solid #c8e6c9" } },
+      e('div', { style: { fontSize: 12, color: VERDE_OSC, fontWeight: "bold" } }, "🌿 Bienvenido a LyL Macetas"),
+      e('div', { style: { fontSize: 11, color: "#666", marginTop: 3 } }, "Seleccioná los productos que te interesan y envianos tu consulta. Te respondemos a la brevedad con un presupuesto personalizado.")
+    ),
     // Buscador
     e('input', {
-      type: "text", placeholder: "Buscar por nombre o medida...",
+      type: "text", placeholder: "🔍 Buscar por nombre o medida...",
       value: buscar, onChange: ev => setBuscar(ev.target.value),
       style: { ...S.input, marginBottom: 10 }
     }),
     // Pills material
-    e('div', { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 } },
+    e('div', { style: { display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 } },
       MATERIALES.map(m =>
         e('button', {
           key: m,
           onClick: () => setMaterial(m),
-          style: { padding: "3px 10px", borderRadius: 12, border: `1px solid ${material === m ? GRN_XL : "#333"}`, background: material === m ? GRN + "44" : "transparent", color: material === m ? GRN_XL : "#555", fontSize: 11, cursor: "pointer" }
+          style: { padding: "4px 10px", borderRadius: 12, border: `1px solid ${material === m ? VERDE : "#ddd"}`, background: material === m ? VERDE + "22" : "transparent", color: material === m ? VERDE_OSC : "#777", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }
         }, m)
       )
     ),
     // Pills pintada
-    e('div', { style: { display: "flex", gap: 6, marginBottom: 12 } },
+    e('div', { style: { display: "flex", gap: 5, marginBottom: 12 } },
       ["Todos", "Pintada", "Sin pintar"].map(p =>
         e('button', {
           key: p,
           onClick: () => setPintada(p),
-          style: { padding: "3px 10px", borderRadius: 12, border: `1px solid ${pintada === p ? GRN_XL : "#333"}`, background: pintada === p ? GRN + "44" : "transparent", color: pintada === p ? GRN_XL : "#555", fontSize: 11, cursor: "pointer" }
+          style: { padding: "4px 10px", borderRadius: 12, border: `1px solid ${pintada === p ? VERDE : "#ddd"}`, background: pintada === p ? VERDE + "22" : "transparent", color: pintada === p ? VERDE_OSC : "#777", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }
         }, p)
       )
     ),
-    // Botón compartir categoría
-    gruposBuscar.length > 0 && e('button', {
-      onClick: abrirModoCompartir,
-      style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #2c5f7a", background: "transparent", color: "#2c5f7a", cursor: "pointer", fontSize: 12, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }
-    }, (() => {
-            const partes = [];
-            if (material !== "Todos") partes.push(material);
-            if (pintada !== "Todos") partes.push(pintada.toLowerCase());
-            if (buscar) partes.push(`"${buscar}"`);
-            return "📲 Compartir " + (partes.length > 0 ? partes.join(" · ") : "catálogo") + " por WhatsApp";
-          })()),
-    // Resultados
-    gruposBuscar.length === 0
-      ? e('div', { style: { textAlign: "center", color: "#555", padding: 30 } }, "Sin resultados")
-      : gruposBuscar.map((grupo, idx) => {
+    // Productos
+    productosFiltrados.length === 0
+      ? e('div', { style: { textAlign: "center", color: "#aaa", padding: 30 } }, "Sin resultados")
+      : productosFiltrados.map((grupo, idx) => {
           const dc = matColors[grupo.material] || "#888";
-          const ps = grupo.material === "Barro" ? "" : (grupo.pintada ? "pintada" : "sin pintar");
-        
-
-  // Vista Admin
-  const vistaAdminEl = e('div', { style: { padding: "16px 14px" } },
-    !adminOk
-      ? e('div', { style: { maxWidth: 300, margin: "40px auto", textAlign: "center" } },
-          e('div', { style: { fontSize: 32, marginBottom: 16 } }, "🔒"),
-          e('div', { style: { fontSize: 15, color: "#2c2c2c", marginBottom: 16, fontWeight: "bold" } }, "Área administrativa"),
-          e('input', {
-            type: "password", placeholder: "Contraseña",
-            value: passInput, onChange: ev => setPassInput(ev.target.value),
-            onKeyDown: ev => ev.key === "Enter" && (passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta")),
-            style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 14, marginBottom: 10, textAlign: "center" }
-          }),
-          e('button', {
-            onClick: () => passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta"),
-            style: { width: "100%", padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
-          }, "Ingresar")
-        )
-      : e('div', null,
-          e('div', { style: { marginBottom: 12 } },
-            e('input', {
-              type: "text", placeholder: "Buscar producto...",
-              value: buscarAdmin, onChange: ev => setBuscarAdmin(ev.target.value),
-              style: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13 }
-            })
-          ),
-          e('div', { style: { display: "flex", gap: 8, marginBottom: 8 } },
-            e('button', {
-              onClick: exportarCatalogo,
-              style: { flex: 1, padding: "10px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
-            }, "💾 Exportar catálogo"),
-            e('button', {
-              onClick: () => { setModoSelAdmin(m => !m); setSelAdmin({}); },
-              style: { padding: "10px 14px", borderRadius: 8, border: `1px solid ${modoSelAdmin ? "#c0392b" : "#ddd"}`, background: modoSelAdmin ? "#fdf0ee" : "transparent", color: modoSelAdmin ? "#c0392b" : "#666", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
-            }, modoSelAdmin ? "✕ Cancelar" : "☑ Seleccionar")
-          ),
-          modoSelAdmin && e('div', { style: { display: "flex", gap: 8, marginBottom: 10, alignItems: "center" } },
-            e('button', {
-              onClick: () => {
-                const cat = catalogoEdit || window.LYL_PRODUCTOS;
-                const sel = {};
-                cat.forEach((p, i) => {
-                  if (!buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase())) sel[i] = true;
-                });
-                setSelAdmin(sel);
-              },
-              style: { flex: 1, padding: "7px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 }
-            }, "Seleccionar todos"),
-            e('button', { onClick: () => setSelAdmin({}), style: { flex: 1, padding: "7px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 } }, "Deseleccionar"),
-            Object.values(selAdmin).filter(Boolean).length > 0 && e('button', {
-              onClick: () => { if (window.confirm("¿Eliminar " + Object.values(selAdmin).filter(Boolean).length + " productos?")) eliminarSeleccionados(); },
-              style: { flex: 1, padding: "7px", borderRadius: 8, border: "none", background: "#c0392b", color: "#fff", cursor: "pointer", fontSize: 11, fontWeight: "bold" }
-            }, "🗑 Eliminar (" + Object.values(selAdmin).filter(Boolean).length + ")")
-          ),
-          catalogoEdit && e('div', { style: { fontSize: 10, color: "#e07b39", marginBottom: 10 } }, "⚠️ Hay cambios sin exportar"),
-          (catalogoEdit || window.LYL_PRODUCTOS)
-            .map((p, i) => ({ ...p, _idx: i }))
-            .filter(p => !buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase()))
-            .map((p) => {
-              const i = p._idx;
-              return editando === i
-                ? e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: 12, marginBottom: 8, border: "2px solid #4a7c59" } },
-                    e('input', { value: formEdit.articulo || "", onChange: ev => setFormEdit(f => ({...f, articulo: ev.target.value})), placeholder: "Nombre", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('input', { value: formEdit.medidas || "", onChange: ev => setFormEdit(f => ({...f, medidas: ev.target.value})), placeholder: "Medidas", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('input', { type: "number", value: formEdit.precio || "", onChange: ev => setFormEdit(f => ({...f, precio: ev.target.value})), placeholder: "Precio", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('select', { value: formEdit.material || "", onChange: ev => setFormEdit(f => ({...f, material: ev.target.value})), style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 10, fontSize: 13, background: "#fff" } },
-                      MATERIALES.filter(m => m !== "Todos").map(m => e('option', { key: m, value: m }, m))
-                    ),
-                    e('div', { style: { display: "flex", gap: 8 } },
-                      e('button', { onClick: guardarEdicion, style: { flex: 1, padding: "9px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Guardar"),
-                      e('button', { onClick: () => setEditando(null), style: { padding: "9px 14px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 13 } }, "Cancelar")
-                    )
-                  )
-                : e('div', { key: i, style: { background: selAdmin[i] ? "#fff5f5" : "#fff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: `1px solid ${selAdmin[i] ? "#f5c6c6" : "#ede9e3"}`, display: "flex", justifyContent: "space-between", alignItems: "center" } },
-                    modoSelAdmin && e('input', {
-                      type: "checkbox", checked: selAdmin[i] || false,
-                      onChange: () => setSelAdmin(prev => ({ ...prev, [i]: !prev[i] })),
-                      style: { width: 18, height: 18, accentColor: "#c0392b", cursor: "pointer", marginRight: 10, flexShrink: 0 }
-                    }),
-                    e('div', { style: { flex: 1, cursor: modoSelAdmin ? "pointer" : "default" }, onClick: modoSelAdmin ? () => setSelAdmin(prev => ({ ...prev, [i]: !prev[i] })) : undefined },
-                      e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, p.articulo + (p.medidas ? " " + p.medidas : "")),
-                      e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } }, p.material + " · " + formatPrecio(p.precio))
-                    ),
-                    !modoSelAdmin && e('div', { style: { display: "flex", gap: 6 } },
-                      e('button', {
-                        onClick: () => { setEditando(i); setFormEdit({ articulo: p.articulo, medidas: p.medidas, precio: p.precio, material: p.material }); },
-                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 12 }
-                      }, "✏️"),
-                      e('button', {
-                        onClick: () => { if (window.confirm("¿Eliminar " + p.articulo + "?")) eliminarProducto(i); },
-                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #fde", background: "transparent", color: "#c0392b", cursor: "pointer", fontSize: 12 }
-                      }, "🗑")
-                    )
-                  );
-            })
-        )
-  );
-
-  // Modal selección para compartir
-  const modalCompartirEl = modoCompartir && e('div', {
-    style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
-  },
-    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480, maxHeight: "80vh", display: "flex", flexDirection: "column" } },
-      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
-        e('span', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c" } }, "Seleccioná qué enviar"),
-        e('button', { onClick: () => setModoCompartir(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
-      ),
-      e('div', { style: { display: "flex", gap: 8, marginBottom: 12 } },
-        e('button', {
-          onClick: () => { const sel = {}; gruposBuscar.forEach((g,i) => { sel[i] = true; }); setSeleccionados(sel); },
-          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12 }
-        }, "Seleccionar todo"),
-        e('button', {
-          onClick: () => setSeleccionados({}),
-          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 12 }
-        }, "Deseleccionar todo")
-      ),
-      e('div', { style: { overflowY: "auto", flex: 1, marginBottom: 12 } },
-        gruposBuscar.map((g, i) => {
-          const dc = matColors[g.material] || "#888";
-          const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
-          return e('label', {
-            key: i,
-            style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 4px", borderBottom: "1px solid #f0ede8", cursor: "pointer" }
-          },
-            e('input', {
-              type: "checkbox",
-              checked: seleccionados[i] || false,
-              onChange: () => setSeleccionados(prev => ({ ...prev, [i]: !prev[i] })),
-              style: { width: 18, height: 18, accentColor: "#4a7c59", cursor: "pointer", flexShrink: 0 }
-            }),
-            e('div', null,
-              e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, g.articulo + ps),
-              e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } },
-                g.variantes.map(v => v.medidas || "—").join(" · ")
+          const ps = grupo.material === "Barro" ? "" : (grupo.pintada ? " · pintada" : " · sin pintar");
+          return e('div', { key: idx, style: { background: "#fff", borderRadius: 10, marginBottom: 8, border: "1px solid #e8e4de", overflow: "hidden" } },
+            e('div', { style: { padding: "9px 12px 7px", borderBottom: "1px solid #f0ede8" } },
+              e('span', { style: { fontWeight: "bold", fontSize: 13, color: "#2c2c2c" } }, grupo.articulo),
+              e('div', { style: { marginTop: 2, display: "flex", gap: 5, alignItems: "center" } },
+                e('div', { style: { width: 6, height: 6, borderRadius: "50%", background: dc } }),
+                e('span', { style: { fontSize: 10, color: "#999" } }, grupo.material + ps)
               )
-            )
-          );
-        })
-      ),
-      e('button', {
-        onClick: enviarSeleccion,
-        style: { width: "100%", padding: "13px", borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
-      }, `📲 Enviar ${Object.values(seleccionados).filter(Boolean).length} productos por WhatsApp`)
-    )
-  );
-
-
-  // Modal importar pedido cliente
-  const modalImportarClienteEl = modalImportarCliente && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 } },
-    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480 } },
-      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } },
-        e('span', { style: { fontSize: 14, fontWeight: "bold", color: "#2c2c2c" } }, "📥 Importar pedido del cliente"),
-        e('button', { onClick: () => setModalImportarCliente(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
-      ),
-      e('div', { style: { fontSize: 12, color: "#666", marginBottom: 10 } }, "Pegá el mensaje completo que te envió el cliente por WhatsApp:"),
-      e('textarea', {
-        value: textoImport,
-        onChange: ev => setTextoImport(ev.target.value),
-        placeholder: "Pegá aquí el mensaje del cliente...",
-        rows: 6,
-        style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 12, fontFamily: "monospace", resize: "vertical", outline: "none" }
-      }),
-      e('div', { style: { display: "flex", gap: 8, marginTop: 10 } },
-        e('button', { onClick: () => setModalImportarCliente(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#777", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
-        e('button', { onClick: () => importarPedidoCliente(textoImport), style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Cargar pedido")
-      ),
-      historial.length > 0 && e('div', { style: { marginTop: 16, borderTop: "1px solid #f0ede8", paddingTop: 12 } },
-        e('div', { style: { fontSize: 12, fontWeight: "bold", color: "#666", marginBottom: 8 } }, "Historial de presupuestos"),
-        historial.map((h, i) =>
-          e('div', { key: i, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: i < historial.length - 1 ? "1px solid #f5f3ef" : "none" } },
-            e('div', null,
-              e('div', { style: { fontSize: 12, fontWeight: "bold", color: "#2c2c2c" } }, `${h.numero || "Sin nro"} — ${h.cliente || "Sin cliente"}`),
-              e('div', { style: { fontSize: 10, color: "#888" } }, `${h.fecha} · ${h.items} productos · $${h.total?.toLocaleString("es-AR")}`)
             ),
-            e('button', {
-              onClick: () => {
-                const d = h.datos;
-                setPresupuesto(d.presupuesto || []);
-                setCliente(d.cliente || ""); setProyecto(d.proyecto || "");
-                setEnvio(d.envio || ""); setDescuento(d.descuento || "");
-                setNumPresup(d.numPresup || ""); setMostrarAnticipo(d.mostrarAnticipo ?? true);
-                saveBorrador(d); setVista("presupuesto"); setModalImportarCliente(false);
-              },
-              style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 11 }
-            }, "Reabrir")
-          )
-        )
-      )
-    )
-  );
-
-  return e('div', {
-            key: idx,
-            style: { background: "#ffffff", borderRadius: 10, marginBottom: 8, border: "1px solid #e8e4de", overflow: "hidden" }
-          },
-            e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 12px 7px", borderBottom: "1px solid #ede9e3" } },
-              e('div', null,
-                e('span', { style: { fontWeight: "bold", fontSize: 14, color: "#2c2c2c" } }, grupo.articulo),
-                e('div', { style: { marginTop: 2, display: "flex", gap: 5, alignItems: "center" } },
-                  e('div', { style: { width: 6, height: 6, borderRadius: "50%", background: dc } }),
-                  e('span', { style: { fontSize: 10, color: "#777" } }, grupo.material + (ps ? ` · ${ps}` : ""))
-                )
-              ),
-              e('button', {
-                onClick: () => setTextoVisible(textoVisible?.idx === idx ? null : { idx, texto: generarTextoGrupo(grupo) }),
-                style: { padding: "3px 9px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 10 }
-              }, textoVisible?.idx === idx ? "✓ ↑" : "texto")
-            ),
-            textoVisible?.idx === idx && e('div', { style: { padding: "8px 12px", background: "#f5f3ef", borderBottom: "1px solid #e8e4de" } },
-              e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: textoVisible.texto.split("\n").length + 1, style: { ...S.input, fontFamily: "monospace", fontSize: 11, resize: "none" } })
-            ),
-            grupo.variantes.map((v, vi) =>
-              e('div', {
-                key: vi,
-                style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 12px", borderBottom: vi < grupo.variantes.length - 1 ? "1px solid #e8e4de" : "none" }
-              },
+            grupo.variantes.map((v, vi) => {
+              const key = `${grupo.articulo}||${v.medidas}||${grupo.material}||${grupo.pintada}`;
+              const enCarrito = carrito[key];
+              return e('div', { key: vi, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", borderBottom: vi < grupo.variantes.length - 1 ? "1px solid #f5f3ef" : "none" } },
                 e('div', null,
-                  e('span', { style: { fontSize: 12, color: "#888" } }, v.medidas || "—"),
-                  (v.litros || v.peso_kg) && e('div', { style: { display: "flex", gap: 8, marginTop: 2 } },
-                    v.litros && e('span', { style: { fontSize: 10, color: "#666", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `🪣 ${v.litros}L`),
-                    v.peso_kg && e('span', { style: { fontSize: 10, color: "#666", background: "#1a2a1a", padding: "1px 6px", borderRadius: 8 } }, `⚖ ${v.peso_kg}kg`)
-                  )
+                  e('span', { style: { fontSize: 12, color: "#666" } }, v.medidas || "—"),
+                  e('div', { style: { fontSize: 13, color: VERDE_OSC, fontWeight: "bold", marginTop: 1 } }, formatPrecio(v.precio))
                 ),
-                e('div', { style: { display: "flex", alignItems: "center", gap: 10 } },
-                  e('span', { style: { fontSize: 13, color: GRN_XL, fontWeight: "bold" } }, formatPrecio(v.precio)),
-                  e('button', {
-                    onClick: () => agregar({ articulo: grupo.articulo, medidas: v.medidas, material: grupo.material, pintada: grupo.pintada, precio: v.precio }),
-                    style: { width: 26, height: 26, borderRadius: "50%", border: `1px solid ${GRN}`, background: GRN_OSC, color: GRN_LT, cursor: "pointer", fontSize: 17, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }
-                  }, "+")
-                )
-              )
-            )
+                enCarrito
+                  ? e('div', { style: { display: "flex", alignItems: "center", gap: 8 } },
+                      e('button', { onClick: () => cambiarCantidad(key, -1), style: { width: 26, height: 26, borderRadius: "50%", border: `1px solid ${VERDE}`, background: "transparent", color: VERDE_OSC, cursor: "pointer", fontSize: 16, fontFamily: "inherit" } }, "−"),
+                      e('span', { style: { fontSize: 14, fontWeight: "bold", color: "#333", minWidth: 16, textAlign: "center" } }, enCarrito.cantidad),
+                      e('button', { onClick: () => cambiarCantidad(key, 1), style: { width: 26, height: 26, borderRadius: "50%", border: "none", background: VERDE, color: "#fff", cursor: "pointer", fontSize: 16, fontFamily: "inherit" } }, "+")
+                    )
+                  : e('button', {
+                      onClick: () => agregarItem(grupo, v),
+                      style: { padding: "5px 12px", borderRadius: 8, border: `1px solid ${VERDE}`, background: "transparent", color: VERDE_OSC, cursor: "pointer", fontSize: 12, fontFamily: "inherit" }
+                    }, "+ Agregar")
+              );
+            })
           );
         })
   );
 
-  // Vista Presupuesto
-  const vistaPresupuesto = e('div', { style: { padding: "12px 14px" } },
-    // Número y datos
-    e('div', { style: { background: "#ffffff", borderRadius: 10, padding: "12px", marginBottom: 10, border: "1px solid #e8e4de" } },
-      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 } },
-        e('span', { style: { fontSize: 12, color: GRN_MNT, fontWeight: "bold" } }, numPresup || "N° pendiente"),
-        e('button', {
-          onClick: abrirModalNuevo,
-          style: { padding: "5px 12px", borderRadius: 8, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 11 }
-        }, "+ Artículo manual")
-      ),
-      e('input', { type: "text", placeholder: "Cliente", value: cliente, onChange: ev => { setCliente(ev.target.value); save({ cliente: ev.target.value }); }, style: { ...S.input, marginBottom: 6 } }),
-      e('input', { type: "text", placeholder: "Proyecto / Dirección", value: proyecto, onChange: ev => { setProyecto(ev.target.value); save({ proyecto: ev.target.value }); }, style: S.input })
-    ),
-
-    // Items
-    presupuesto.length === 0
-      ? e('div', { style: { textAlign: "center", color: "#999", padding: 30, fontSize: 13 } }, "El presupuesto está vacío.\nBuscá productos en la pestaña 🔍")
-      : presupuesto.map(item =>
-          e('div', { key: item.key, style: { background: "#ffffff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #e8e4de" } },
-            e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 } },
-              e('div', { style: { flex: 1 } },
-                e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, item.articulo + (item.medidas ? " " + item.medidas : "")),
-                e('div', { style: { display: "flex", gap: 6, marginTop: 3, flexWrap: "wrap", alignItems: "center" } },
-                  e('span', { style: S.pill(matColors[item.material] || "#888") }, item.material),
-                  e('span', { style: { fontSize: 11, color: GRN_MNT } }, formatPrecio(item.precio) + " c/u"),
-                  e('label', { style: { display: "flex", alignItems: "center", gap: 4, fontSize: 10, color: item.sinDescuento ? "#e07b39" : "#444", cursor: "pointer" } },
-                    e('input', { type: "checkbox", checked: item.sinDescuento || false, onChange: () => toggleSinDescuento(item.key), style: { accentColor: "#e07b39" } }),
-                    "sin desc."
-                  )
-                )
-              ),
-              e('button', { onClick: () => quitar(item.key), style: { background: "transparent", border: "none", color: "#999", cursor: "pointer", fontSize: 16, padding: "0 4px" } }, "×")
-            ),
-            e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 } },
-              e('div', { style: { display: "flex", alignItems: "center", gap: 8 } },
-                e('button', { onClick: () => setP(prev => prev.map(i => i.key === item.key ? { ...i, cantidad: Math.max(1, i.cantidad - 1) } : i)), style: { width: 24, height: 24, borderRadius: "50%", border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 16 } }, "−"),
-                e('span', { style: { fontSize: 14, color: "#555", minWidth: 20, textAlign: "center" } }, item.cantidad),
-                e('button', { onClick: () => setP(prev => prev.map(i => i.key === item.key ? { ...i, cantidad: i.cantidad + 1 } : i)), style: { width: 24, height: 24, borderRadius: "50%", border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 16 } }, "+")
-              ),
-              e('span', { style: { fontSize: 14, fontWeight: "bold", color: GRN_XL } }, formatPrecio(item.precio * item.cantidad))
-            ),
-            notaAbierta === item.key
-              ? e('div', { style: { marginTop: 8 } },
-                  e('input', { type: "text", placeholder: "Nota...", value: notaTemp, onChange: ev => setNotaTemp(ev.target.value), onKeyDown: ev => ev.key === "Enter" && guardarNota(item.key), autoFocus: true, style: { ...S.input, fontSize: 12 } }),
-                  e('div', { style: { display: "flex", gap: 6, marginTop: 4 } },
-                    e('button', { onClick: () => guardarNota(item.key), style: { flex: 1, padding: "5px", borderRadius: 6, border: "none", background: GRN, color: "#fff", cursor: "pointer", fontSize: 11 } }, "✓ Guardar"),
-                    e('button', { onClick: () => setNotaAbierta(null), style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #e0dbd4", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 } }, "×")
-                  )
-                )
-              : e('button', { onClick: () => { setNotaAbierta(item.key); setNotaTemp(item.nota || ""); }, style: { marginTop: 6, background: "transparent", border: "none", color: item.nota ? GRN_MNT : "#333", cursor: "pointer", fontSize: 10, padding: 0 } },
-                  item.nota ? `📝 ${item.nota}` : "+ agregar nota"
-                )
-          )
-        ),
-
-    // Ajustes y totales
-    presupuesto.length > 0 && e('div', { style: { background: "#ffffff", borderRadius: 10, padding: "12px", marginTop: 4, border: "1px solid #e8e4de" } },
-      e('div', { style: { display: "flex", gap: 8, marginBottom: 10 } },
-        e('input', { type: "number", placeholder: "Envío $", value: envio, onChange: ev => { setEnvio(ev.target.value); save({ envio: ev.target.value }); }, style: { ...S.input, flex: 1 } }),
-        e('input', { type: "number", placeholder: "Descuento %", value: descuento, onChange: ev => { setDescuento(ev.target.value); save({ descuento: ev.target.value }); }, style: { ...S.input, flex: 1 } })
-      ),
-      e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#888", marginBottom: 4 } }, e('span', null, "Subtotal"), e('span', null, formatPrecio(subtotal))),
-      presupuesto.some(i => i.sinDescuento) && e('div', { style: { fontSize: 10, color: "#666", marginBottom: 4, textAlign: "right" } }, `Base con descuento: ${formatPrecio(baseParaDesc)}`),
-      descPct > 0 && e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#e07b39", marginBottom: 4 } }, e('span', null, `Descuento ${descPct}%`), e('span', null, `- ${formatPrecio(montoDesc)}`)),
-      envioNum > 0 && e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#888", marginBottom: 4 } }, e('span', null, "Envío"), e('span', null, formatPrecio(envioNum))),
-      e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: "bold", color: GRN_XL, borderTop: "1px solid #e0dbd4", paddingTop: 8, marginTop: 4 } }, e('span', null, "TOTAL"), e('span', null, formatPrecio(totalFinal))),
-      e('label', { style: { display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 11, color: "#666", cursor: "pointer" } },
-        e('input', { type: "checkbox", checked: mostrarAnticipo, onChange: () => setMostrarAnticipo(v => !v) }),
-        "Mostrar anticipo y saldo"
-      ),
-      mostrarAnticipo && e('div', { style: { marginTop: 4 } },
-        e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 11, color: GRN_MNT, marginTop: 2 } }, e('span', null, "Anticipo 80%"), e('span', null, formatPrecio(anticipo80))),
-        e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 11, color: "#666" } }, e('span', null, "Saldo"), e('span', null, formatPrecio(saldo20)))
-      )
-    ),
-
-    // Acciones
-    presupuesto.length > 0 && e('div', { style: { display: "flex", flexDirection: "column", gap: 8, marginTop: 10 } },
-      e('button', {
-        onClick: () => window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(generarTexto())}`, "_blank"),
-        style: { width: "100%", padding: "13px", borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
-      }, "📲 Enviar por WhatsApp"),
-      e('button', {
-        onClick: () => setTextoVisible(textoVisible?.idx === "presup" ? null : { idx: "presup", texto: generarTexto() }),
-        style: { width: "100%", padding: "10px", borderRadius: 10, border: "1px solid #d0ccc6", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12 }
-      }, "📋 Ver texto para copiar"),
-      textoVisible?.idx === "presup" && e('div', { style: { background: "#f5f3ef", border: `1px solid ${GRN}`, borderRadius: 8, padding: "10px 12px" } },
-        e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: Math.min(textoVisible.texto.split("\n").length + 1, 16), style: { ...S.input, fontFamily: "monospace", fontSize: 12, lineHeight: 1.5, resize: "vertical" } })
-      ),
-      e('button', {
-        onClick: () => setTextoVisible(textoVisible?.idx === "json" ? null : { idx: "json", texto: generarJson() }),
-        style: { width: "100%", padding: "11px", borderRadius: 10, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 13, fontWeight: "bold" }
-      }, "📄 Generar PDF / Excel / Remito → Pegar a Claude"),
-      textoVisible?.idx === "json" && e('div', { style: { background: "#f0f7f2", border: `1px solid ${GRN}`, borderRadius: 8, padding: "12px 14px" } },
-        e('div', { style: { fontSize: 12, color: GRN_MNT, marginBottom: 6, fontWeight: "bold" } }, "📋 Copiá esto y pegalo en el chat:"),
-        e('textarea', { readOnly: true, value: textoVisible.texto, onFocus: ev => ev.target.select(), rows: 6, style: { ...S.input, fontFamily: "monospace", fontSize: 11, lineHeight: 1.4, resize: "vertical" } })
-      ),
-      e('button', {
-        onClick: () => setConfirmarVaciar(true),
-        style: { width: "100%", padding: "9px", borderRadius: 10, border: "1px solid #ddd", background: "transparent", color: "#aaa", cursor: "pointer", fontSize: 11 }
-      }, "🗑 Vaciar presupuesto"),
-      e('div', { style: { borderTop: "1px solid #e8e4de", paddingTop: 10, marginTop: 2, display: "flex", gap: 8 } },
-        e('button', { onClick: exportarBorrador, style: { flex: 1, padding: "9px", borderRadius: 8, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 12, fontWeight: "bold" } }, "💾 Guardar borrador"),
-        e('label', { style: { flex: 1, padding: "9px", borderRadius: 8, border: "1px solid #d0ccc6", background: "transparent", color: "#888", cursor: "pointer", fontSize: 12, textAlign: "center", display: "block" } },
-          "📂 Cargar borrador",
-          e('input', { type: "file", accept: ".json", onChange: importarBorrador, style: { display: "none" } })
-        )
-      )
-    )
-  );
-
-  // Modal manual
-  const modalEl = modalAbierto && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 } },
-    e('div', { style: { background: "#ffffff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 360, border: "1px solid #e0dbd4" } },
-      e('h3', { style: { color: GRN_XL, fontSize: 15, marginBottom: 14 } }, "Artículo manual"),
-      e('input', { type: "text", placeholder: "Artículo *", value: formManual.articulo, onChange: ev => setFormManual(f => ({ ...f, articulo: ev.target.value })), style: { ...S.input, marginBottom: 8 } }),
-      e('input', { type: "text", placeholder: "Medidas", value: formManual.medidas, onChange: ev => setFormManual(f => ({ ...f, medidas: ev.target.value })), style: { ...S.input, marginBottom: 8 } }),
-      e('input', { type: "number", placeholder: "Precio *", value: formManual.precio, onChange: ev => setFormManual(f => ({ ...f, precio: ev.target.value })), style: { ...S.input, marginBottom: 8 } }),
-      e('input', { type: "text", placeholder: "Nota", value: formManual.nota, onChange: ev => setFormManual(f => ({ ...f, nota: ev.target.value })), style: { ...S.input, marginBottom: 10 } }),
-      e('div', { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 } },
-        MATERIALES_MANUAL.map(m => e('button', {
-          key: m,
-          onClick: () => setFormManual(f => ({ ...f, material: m })),
-          style: { padding: "3px 8px", borderRadius: 10, border: `1px solid ${formManual.material === m ? GRN_XL : "#333"}`, background: formManual.material === m ? GRN + "44" : "transparent", color: formManual.material === m ? GRN_XL : "#555", fontSize: 10, cursor: "pointer" }
-        }, m))
-      ),
-      e('div', { style: { display: "flex", gap: 8 } },
-        e('button', { onClick: () => setModalAbierto(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
-        e('button', { onClick: guardarManual, style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: GRN, color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "Agregar")
-      )
-    )
-  );
-
-  // Modal confirmar vaciar
-  const confirmarEl = confirmarVaciar && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 } },
-    e('div', { style: { background: "#ffffff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 320, border: "1px solid #e0dbd4", textAlign: "center" } },
-      e('div', { style: { fontSize: 32, marginBottom: 10 } }, "🗑"),
-      e('div', { style: { fontSize: 15, color: "#555", marginBottom: 6 } }, "¿Vaciar el presupuesto?"),
-      e('div', { style: { fontSize: 12, color: "#666", marginBottom: 16 } }, "Se van a borrar todos los items"),
-      e('div', { style: { display: "flex", gap: 8 } },
-        e('button', { onClick: () => setConfirmarVaciar(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
-        e('button', { onClick: vaciar, style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: "#c0392b", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "Sí, vaciar")
-      )
-    )
-  );
-
-
-
-  // Vista Admin
-  const vistaAdminEl = e('div', { style: { padding: "16px 14px" } },
-    !adminOk
-      ? e('div', { style: { maxWidth: 300, margin: "40px auto", textAlign: "center" } },
-          e('div', { style: { fontSize: 32, marginBottom: 16 } }, "🔒"),
-          e('div', { style: { fontSize: 15, color: "#2c2c2c", marginBottom: 16, fontWeight: "bold" } }, "Área administrativa"),
-          e('input', {
-            type: "password", placeholder: "Contraseña",
-            value: passInput, onChange: ev => setPassInput(ev.target.value),
-            onKeyDown: ev => ev.key === "Enter" && (passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta")),
-            style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 14, marginBottom: 10, textAlign: "center" }
-          }),
+  // ── VISTA PEDIDO
+  const pedidoVista = e('div', { style: { padding: "12px 14px" } },
+    enviado
+      ? e('div', { style: { textAlign: "center", padding: 40 } },
+          e('div', { style: { fontSize: 48, marginBottom: 16 } }, "✅"),
+          e('div', { style: { fontSize: 18, fontWeight: "bold", color: VERDE_OSC, marginBottom: 8 } }, "¡Consulta enviada!"),
+          e('div', { style: { fontSize: 13, color: "#666", marginBottom: 24 } }, "Te respondemos a la brevedad con tu presupuesto."),
           e('button', {
-            onClick: () => passInput === "lyl2024" ? setAdminOk(true) : alert("Contraseña incorrecta"),
-            style: { width: "100%", padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
-          }, "Ingresar")
+            onClick: () => { setCarrito({}); setNombre(""); setNota(""); setEnviado(false); setVista("catalogo"); },
+            style: { padding: "12px 24px", borderRadius: 10, border: "none", background: VERDE, color: "#fff", cursor: "pointer", fontSize: 14, fontFamily: "inherit" }
+          }, "Nueva consulta")
         )
       : e('div', null,
-          e('div', { style: { marginBottom: 12 } },
-            e('input', {
-              type: "text", placeholder: "Buscar producto...",
-              value: buscarAdmin, onChange: ev => setBuscarAdmin(ev.target.value),
-              style: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13 }
-            })
+          e('div', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c", marginBottom: 12 } }, "Tu consulta"),
+          // Datos del cliente
+          e('div', { style: { background: "#fff", borderRadius: 10, padding: 14, border: "1px solid #e8e4de", marginBottom: 10 } },
+            e('input', { type: "text", placeholder: "Tu nombre *", value: nombre, onChange: ev => setNombre(ev.target.value), style: { ...S.input, marginBottom: 8 } }),
+            e('input', { type: "text", placeholder: "Nota o consulta adicional (opcional)", value: nota, onChange: ev => setNota(ev.target.value), style: S.input })
           ),
-          e('div', { style: { display: "flex", gap: 8, marginBottom: 8 } },
-            e('button', {
-              onClick: exportarCatalogo,
-              style: { flex: 1, padding: "10px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
-            }, "💾 Exportar catálogo"),
-            e('button', {
-              onClick: () => { setModoSelAdmin(m => !m); setSelAdmin({}); },
-              style: { padding: "10px 14px", borderRadius: 8, border: `1px solid ${modoSelAdmin ? "#c0392b" : "#ddd"}`, background: modoSelAdmin ? "#fdf0ee" : "transparent", color: modoSelAdmin ? "#c0392b" : "#666", cursor: "pointer", fontSize: 12, fontWeight: "bold" }
-            }, modoSelAdmin ? "✕ Cancelar" : "☑ Seleccionar")
-          ),
-          modoSelAdmin && e('div', { style: { display: "flex", gap: 8, marginBottom: 10, alignItems: "center" } },
-            e('button', {
-              onClick: () => {
-                const cat = catalogoEdit || window.LYL_PRODUCTOS;
-                const sel = {};
-                cat.forEach((p, i) => {
-                  if (!buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase())) sel[i] = true;
-                });
-                setSelAdmin(sel);
-              },
-              style: { flex: 1, padding: "7px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 }
-            }, "Seleccionar todos"),
-            e('button', { onClick: () => setSelAdmin({}), style: { flex: 1, padding: "7px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 11 } }, "Deseleccionar"),
-            Object.values(selAdmin).filter(Boolean).length > 0 && e('button', {
-              onClick: () => { if (window.confirm("¿Eliminar " + Object.values(selAdmin).filter(Boolean).length + " productos?")) eliminarSeleccionados(); },
-              style: { flex: 1, padding: "7px", borderRadius: 8, border: "none", background: "#c0392b", color: "#fff", cursor: "pointer", fontSize: 11, fontWeight: "bold" }
-            }, "🗑 Eliminar (" + Object.values(selAdmin).filter(Boolean).length + ")")
-          ),
-          catalogoEdit && e('div', { style: { fontSize: 10, color: "#e07b39", marginBottom: 10 } }, "⚠️ Hay cambios sin exportar"),
-          (catalogoEdit || window.LYL_PRODUCTOS)
-            .map((p, i) => ({ ...p, _idx: i }))
-            .filter(p => !buscarAdmin || p.articulo.toLowerCase().includes(buscarAdmin.toLowerCase()) || p.material.toLowerCase().includes(buscarAdmin.toLowerCase()))
-            .map((p) => {
-              const i = p._idx;
-              return editando === i
-                ? e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: 12, marginBottom: 8, border: "2px solid #4a7c59" } },
-                    e('input', { value: formEdit.articulo || "", onChange: ev => setFormEdit(f => ({...f, articulo: ev.target.value})), placeholder: "Nombre", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('input', { value: formEdit.medidas || "", onChange: ev => setFormEdit(f => ({...f, medidas: ev.target.value})), placeholder: "Medidas", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('input', { type: "number", value: formEdit.precio || "", onChange: ev => setFormEdit(f => ({...f, precio: ev.target.value})), placeholder: "Precio", style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 6, fontSize: 13 } }),
-                    e('select', { value: formEdit.material || "", onChange: ev => setFormEdit(f => ({...f, material: ev.target.value})), style: { width: "100%", padding: "7px 10px", borderRadius: 6, border: "1px solid #ddd", marginBottom: 10, fontSize: 13, background: "#fff" } },
-                      MATERIALES.filter(m => m !== "Todos").map(m => e('option', { key: m, value: m }, m))
-                    ),
-                    e('div', { style: { display: "flex", gap: 8 } },
-                      e('button', { onClick: guardarEdicion, style: { flex: 1, padding: "9px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Guardar"),
-                      e('button', { onClick: () => setEditando(null), style: { padding: "9px 14px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 13 } }, "Cancelar")
-                    )
-                  )
-                : e('div', { key: i, style: { background: selAdmin[i] ? "#fff5f5" : "#fff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: `1px solid ${selAdmin[i] ? "#f5c6c6" : "#ede9e3"}`, display: "flex", justifyContent: "space-between", alignItems: "center" } },
-                    modoSelAdmin && e('input', {
-                      type: "checkbox", checked: selAdmin[i] || false,
-                      onChange: () => setSelAdmin(prev => ({ ...prev, [i]: !prev[i] })),
-                      style: { width: 18, height: 18, accentColor: "#c0392b", cursor: "pointer", marginRight: 10, flexShrink: 0 }
-                    }),
-                    e('div', { style: { flex: 1, cursor: modoSelAdmin ? "pointer" : "default" }, onClick: modoSelAdmin ? () => setSelAdmin(prev => ({ ...prev, [i]: !prev[i] })) : undefined },
-                      e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, p.articulo + (p.medidas ? " " + p.medidas : "")),
-                      e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } }, p.material + " · " + formatPrecio(p.precio))
-                    ),
-                    !modoSelAdmin && e('div', { style: { display: "flex", gap: 6 } },
-                      e('button', {
-                        onClick: () => { setEditando(i); setFormEdit({ articulo: p.articulo, medidas: p.medidas, precio: p.precio, material: p.material }); },
-                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 12 }
-                      }, "✏️"),
-                      e('button', {
-                        onClick: () => { if (window.confirm("¿Eliminar " + p.articulo + "?")) eliminarProducto(i); },
-                        style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #fde", background: "transparent", color: "#c0392b", cursor: "pointer", fontSize: 12 }
-                      }, "🗑")
-                    )
-                  );
-            })
-        )
-  );
-
-  // Modal selección para compartir
-  const modalCompartirEl = modoCompartir && e('div', {
-    style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 }
-  },
-    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480, maxHeight: "80vh", display: "flex", flexDirection: "column" } },
-      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 } },
-        e('span', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c" } }, "Seleccioná qué enviar"),
-        e('button', { onClick: () => setModoCompartir(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
-      ),
-      e('div', { style: { display: "flex", gap: 8, marginBottom: 12 } },
-        e('button', {
-          onClick: () => { const sel = {}; gruposBuscar.forEach((g,i) => { sel[i] = true; }); setSeleccionados(sel); },
-          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 12 }
-        }, "Seleccionar todo"),
-        e('button', {
-          onClick: () => setSeleccionados({}),
-          style: { flex: 1, padding: "6px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#999", cursor: "pointer", fontSize: 12 }
-        }, "Deseleccionar todo")
-      ),
-      e('div', { style: { overflowY: "auto", flex: 1, marginBottom: 12 } },
-        gruposBuscar.map((g, i) => {
-          const dc = matColors[g.material] || "#888";
-          const ps = g.material === "Barro" ? "" : (g.pintada ? " · pintada" : " · sin pintar");
-          return e('label', {
-            key: i,
-            style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 4px", borderBottom: "1px solid #f0ede8", cursor: "pointer" }
-          },
-            e('input', {
-              type: "checkbox",
-              checked: seleccionados[i] || false,
-              onChange: () => setSeleccionados(prev => ({ ...prev, [i]: !prev[i] })),
-              style: { width: 18, height: 18, accentColor: "#4a7c59", cursor: "pointer", flexShrink: 0 }
-            }),
-            e('div', null,
-              e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, g.articulo + ps),
-              e('div', { style: { fontSize: 11, color: "#999", marginTop: 2 } },
-                g.variantes.map(v => v.medidas || "—").join(" · ")
+          // Items seleccionados
+          Object.values(carrito).map((item, i) => {
+            const key = `${item.articulo}||${item.medidas}||${item.material}||${item.pintada}`;
+            return e('div', { key: i, style: { background: "#fff", borderRadius: 10, padding: "10px 12px", marginBottom: 6, border: "1px solid #e8e4de", display: "flex", justifyContent: "space-between", alignItems: "center" } },
+              e('div', null,
+                e('div', { style: { fontSize: 13, fontWeight: "bold", color: "#2c2c2c" } }, item.articulo + (item.medidas ? " " + item.medidas : "")),
+                e('div', { style: { fontSize: 11, color: "#888", marginTop: 2 } }, item.material + " · " + formatPrecio(item.precio) + " c/u")
+              ),
+              e('div', { style: { display: "flex", alignItems: "center", gap: 8 } },
+                e('button', { onClick: () => cambiarCantidad(key, -1), style: { width: 26, height: 26, borderRadius: "50%", border: "1px solid #ddd", background: "transparent", color: "#666", cursor: "pointer", fontSize: 16, fontFamily: "inherit" } }, "−"),
+                e('span', { style: { fontSize: 14, fontWeight: "bold", minWidth: 20, textAlign: "center" } }, item.cantidad),
+                e('button', { onClick: () => cambiarCantidad(key, 1), style: { width: 26, height: 26, borderRadius: "50%", border: "none", background: VERDE, color: "#fff", cursor: "pointer", fontSize: 16, fontFamily: "inherit" } }, "+")
               )
-            )
-          );
-        })
-      ),
-      e('button', {
-        onClick: enviarSeleccion,
-        style: { width: "100%", padding: "13px", borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold" }
-      }, `📲 Enviar ${Object.values(seleccionados).filter(Boolean).length} productos por WhatsApp`)
-    )
-  );
-
-
-  // Modal importar pedido cliente
-  const modalImportarClienteEl = modalImportarCliente && e('div', { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 1000 } },
-    e('div', { style: { background: "#fff", borderRadius: "16px 16px 0 0", padding: 20, width: "100%", maxWidth: 480 } },
-      e('div', { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } },
-        e('span', { style: { fontSize: 14, fontWeight: "bold", color: "#2c2c2c" } }, "📥 Importar pedido del cliente"),
-        e('button', { onClick: () => setModalImportarCliente(false), style: { background: "transparent", border: "none", fontSize: 20, color: "#999", cursor: "pointer" } }, "×")
-      ),
-      e('div', { style: { fontSize: 12, color: "#666", marginBottom: 10 } }, "Pegá el mensaje completo que te envió el cliente por WhatsApp:"),
-      e('textarea', {
-        value: textoImport,
-        onChange: ev => setTextoImport(ev.target.value),
-        placeholder: "Pegá aquí el mensaje del cliente...",
-        rows: 6,
-        style: { width: "100%", padding: "10px", borderRadius: 8, border: "1px solid #ddd", fontSize: 12, fontFamily: "monospace", resize: "vertical", outline: "none" }
-      }),
-      e('div', { style: { display: "flex", gap: 8, marginTop: 10 } },
-        e('button', { onClick: () => setModalImportarCliente(false), style: { flex: 1, padding: "11px", borderRadius: 8, border: "1px solid #ddd", background: "transparent", color: "#777", cursor: "pointer", fontSize: 13 } }, "Cancelar"),
-        e('button', { onClick: () => importarPedidoCliente(textoImport), style: { flex: 1, padding: "11px", borderRadius: 8, border: "none", background: "#4a7c59", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: "bold" } }, "✓ Cargar pedido")
-      ),
-      historial.length > 0 && e('div', { style: { marginTop: 16, borderTop: "1px solid #f0ede8", paddingTop: 12 } },
-        e('div', { style: { fontSize: 12, fontWeight: "bold", color: "#666", marginBottom: 8 } }, "Historial de presupuestos"),
-        historial.map((h, i) =>
-          e('div', { key: i, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: i < historial.length - 1 ? "1px solid #f5f3ef" : "none" } },
-            e('div', null,
-              e('div', { style: { fontSize: 12, fontWeight: "bold", color: "#2c2c2c" } }, `${h.numero || "Sin nro"} — ${h.cliente || "Sin cliente"}`),
-              e('div', { style: { fontSize: 10, color: "#888" } }, `${h.fecha} · ${h.items} productos · $${h.total?.toLocaleString("es-AR")}`)
+            );
+          }),
+          // Total referencial
+          e('div', { style: { background: "#f0f7f2", borderRadius: 10, padding: "12px 14px", marginTop: 8, border: "1px solid #c8e6c9" } },
+            e('div', { style: { display: "flex", justifyContent: "space-between", fontSize: 13, color: "#555", marginBottom: 4 } },
+              e('span', null, `${totalItems} productos seleccionados`),
+              e('span', null, formatPrecio(totalPrecio))
             ),
-            e('button', {
-              onClick: () => {
-                const d = h.datos;
-                setPresupuesto(d.presupuesto || []);
-                setCliente(d.cliente || ""); setProyecto(d.proyecto || "");
-                setEnvio(d.envio || ""); setDescuento(d.descuento || "");
-                setNumPresup(d.numPresup || ""); setMostrarAnticipo(d.mostrarAnticipo ?? true);
-                saveBorrador(d); setVista("presupuesto"); setModalImportarCliente(false);
-              },
-              style: { padding: "5px 10px", borderRadius: 6, border: "1px solid #4a7c59", background: "transparent", color: "#4a7c59", cursor: "pointer", fontSize: 11 }
-            }, "Reabrir")
-          )
+            e('div', { style: { fontSize: 10, color: "#888", marginTop: 4 } }, "* Precio de referencia. El presupuesto final puede incluir descuentos y costos de envío.")
+          ),
+          e('button', {
+            onClick: enviarPedido,
+            style: { width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#25D366", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: "bold", marginTop: 12, fontFamily: "inherit" }
+          }, "📲 Enviar consulta por WhatsApp")
         )
-      )
-    )
   );
 
-  return e('div', { style: { minHeight: "100vh", background: "#f8f6f2", fontFamily: "'Helvetica Neue', Arial, sans-serif", maxWidth: 480, margin: "0 auto" } },
-    headerEl,
-    tabsEl,
-    e('div', { style: { overflowY: "auto" } },
-      vista === "buscar" ? vistaBuscar : vista === "presupuesto" ? vistaPresupuesto : vistaAdminEl
-    ),
-    modalEl,
-    confirmarEl,
-    modalCompartirEl,
-    modalImportarClienteEl
+  return e('div', { style: { minHeight: "100vh", background: CREMA, fontFamily: "'Helvetica Neue', Arial, sans-serif", maxWidth: 480, margin: "0 auto" } },
+    header,
+    vista === "catalogo" ? catalogo : pedidoVista
   );
 }
 
