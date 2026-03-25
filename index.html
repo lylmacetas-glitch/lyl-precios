@@ -14,7 +14,6 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #f0ede8; }
     ::-webkit-scrollbar-thumb { background: #c8c4be; border-radius: 2px; }
-    
   </style>
 </head>
 <body>
@@ -2072,7 +2071,11 @@ function App() {
           "📂 Cargar borrador",
           e('input', { type: "file", accept: ".json", onChange: importarBorrador, style: { display: "none" } })
         )
-      )
+      ),
+      e('button', {
+        onClick: () => setModalImportarCliente(true),
+        style: { width: "100%", padding: "10px", borderRadius: 8, border: `1px solid ${GRN}`, background: "transparent", color: GRN_MNT, cursor: "pointer", fontSize: 13, fontWeight: "bold", marginTop: 4 }
+      }, "📥 Importar pedido de cliente")
     )
   );
 

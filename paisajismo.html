@@ -14,7 +14,6 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #f0ede8; }
     ::-webkit-scrollbar-thumb { background: #c8c4be; border-radius: 2px; }
-    
   </style>
 </head>
 <body>
@@ -1022,6 +1021,7 @@ function App() {
   const [nombre, setNombre] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [nota, setNota] = useState("");
+  const [direccion, setDireccion] = useState("");
   const [vista, setVista] = useState("catalogo");
   const [enviado, setEnviado] = useState(false);
 
@@ -1078,7 +1078,8 @@ function App() {
     items.forEach(i => {
       txt += `  • ${i.articulo}${i.medidas ? " " + i.medidas : ""}${i.pintada ? " (pintada)" : ""} — ${i.cantidad} u.\n`;
     });
-    if (nota.trim()) txt += `\n📝 *Nota:* ${nota.trim()}\n`;
+    if (direccion.trim()) txt += `\n📍 *Dirección:* ${direccion.trim()}\n`;
+    if (nota.trim()) txt += `📝 *Nota:* ${nota.trim()}\n`;
     txt += `\n_Consulta mayorista enviada desde lylmacetas.com.ar_\n\n`;
     const json = JSON.stringify({
       cliente: nombre.trim() + (empresa.trim() ? " (" + empresa.trim() + ")" : ""),
@@ -1154,13 +1155,14 @@ function App() {
           e('div', { style: { fontSize: 48, marginBottom: 16 } }, "✅"),
           e('div', { style: { fontSize: 18, fontWeight: "bold", color: AZUL_OSC, marginBottom: 8 } }, "¡Consulta enviada!"),
           e('div', { style: { fontSize: 13, color: "#666", marginBottom: 24 } }, "Te respondemos a la brevedad."),
-          e('button', { onClick: () => { setCarrito({}); setNombre(""); setEmpresa(""); setNota(""); setEnviado(false); setVista("catalogo"); }, style: { padding: "12px 24px", borderRadius: 10, border: "none", background: AZUL, color: "#fff", cursor: "pointer", fontSize: 14, fontFamily: "inherit" } }, "Nueva consulta")
+          e('button', { onClick: () => { setCarrito({}); setNombre(""); setEmpresa(""); setDireccion(""); setNota(""); setEnviado(false); setVista("catalogo"); }, style: { padding: "12px 24px", borderRadius: 10, border: "none", background: AZUL, color: "#fff", cursor: "pointer", fontSize: 14, fontFamily: "inherit" } }, "Nueva consulta")
         )
       : e('div', null,
           e('div', { style: { fontSize: 15, fontWeight: "bold", color: "#2c2c2c", marginBottom: 12 } }, "Tu consulta mayorista"),
           e('div', { style: { background: "#fff", borderRadius: 10, padding: 14, border: "1px solid #e8e4de", marginBottom: 10 } },
             e('input', { type: "text", placeholder: "Nombre y apellido *", value: nombre, onChange: ev => setNombre(ev.target.value), style: { ...S.input, marginBottom: 8 } }),
             e('input', { type: "text", placeholder: "Empresa / Estudio (opcional)", value: empresa, onChange: ev => setEmpresa(ev.target.value), style: { ...S.input, marginBottom: 8 } }),
+            e('input', { type: "text", placeholder: "Dirección de entrega (opcional)", value: direccion, onChange: ev => setDireccion(ev.target.value), style: { ...S.input, marginBottom: 8 } }),
             e('input', { type: "text", placeholder: "Nota o detalle del proyecto (opcional)", value: nota, onChange: ev => setNota(ev.target.value), style: S.input })
           ),
           Object.values(carrito).map((item, i) => {
