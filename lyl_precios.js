@@ -8,7 +8,7 @@ const MATERIALES_MANUAL = ["Fibrocemento", "Rotomoldeado", "Fibra de Vidrio", "B
 const formatPrecio = (n) => "$\u00a0" + n.toLocaleString("es-AR", { minimumFractionDigits: 0 });
 const WA_NUMBER = "5491157554899";
 const STORAGE_KEY = "lyl_presup_v2";
-const FECHA_LISTA = "19-mar-2026";
+const FECHA_LISTA = "06-abr-2026";
 
 const matColors = {
   Barro: "#b5651d", "Barro Artesanal": "#8B4513",
